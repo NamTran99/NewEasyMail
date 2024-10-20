@@ -3,9 +3,14 @@ package app.k9mail.feature.account.oauth.ui
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
+import app.k9mail.core.android.common.data.FireBaseParam.SIGN_IN_ERROR
+import app.k9mail.core.android.common.data.FireBaseParam.SIGN_IN_ERROR_CONTENT
+import app.k9mail.core.android.common.data.FireBaseScreenEvent.SIGN_IN_OUTLOOK
+import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
 import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract.UseCase
+import app.k9mail.feature.account.oauth.domain.OauthAccountType
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationIntentResult
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect
@@ -19,15 +24,16 @@ class AccountOAuthViewModel(
     initialState: State = State(),
     private val getOAuthRequestIntent: UseCase.GetOAuthRequestIntent,
     private val finishOAuthSignIn: UseCase.FinishOAuthSignIn,
-    private val checkIsGoogleSignIn: UseCase.CheckIsGoogleSignIn,
+    private val checkIsGoogleSignIn: UseCase.CheckAccountType,
 ) : BaseViewModel<State, Event, Effect>(initialState), ViewModel {
 
-    override fun initState(state: State) {
-        val isGoogleSignIn = checkIsGoogleSignIn.execute(state.hostname)
+    private var oauthType :  OauthAccountType? = null
 
+    override fun initState(state: State) {
+        oauthType = checkIsGoogleSignIn.execute(state.hostname)
         updateState {
             state.copy(
-                isGoogleSignIn = isGoogleSignIn,
+                oauthAccountType = oauthType,
             )
         }
     }
@@ -36,7 +42,13 @@ class AccountOAuthViewModel(
         when (event) {
             is Event.OnOAuthResult -> onOAuthResult(event.resultCode, event.data)
 
+            is Event.OnOAuthMicrosoftResult -> {
+                handleSignInResult(event.result)
+            }
+
             Event.SignInClicked -> onSignIn()
+
+            Event.OnOAuthMicrosoftClick -> emitEffect(Effect.LaunchOAuthMicrosoft)
 
             Event.OnBackClicked -> navigateBack()
 
@@ -44,23 +56,42 @@ class AccountOAuthViewModel(
         }
     }
 
-    private fun onSignIn() {
-        val result = getOAuthRequestIntent.execute(
-            hostname = state.value.hostname,
-            emailAddress = state.value.emailAddress,
-        )
-
+    private fun handleSignInResult(result: AuthorizationResult) {
         when (result) {
-            AuthorizationIntentResult.NotSupported -> {
+            AuthorizationResult.BrowserNotAvailable -> updateErrorState(Error.BrowserNotAvailable)
+            AuthorizationResult.Canceled -> updateErrorState(Error.Canceled)
+            is AuthorizationResult.Failure -> updateErrorState(Error.Unknown(result.error))
+            is AuthorizationResult.Success -> {
                 updateState { state ->
-                    state.copy(
-                        error = Error.NotSupported,
-                    )
+                    state.copy(isLoading = false)
                 }
+                navigateNext(authorizationState = result.state)
             }
+        }
+    }
 
-            is AuthorizationIntentResult.Success -> {
-                emitEffect(Effect.LaunchOAuth(result.intent))
+
+    private fun onSignIn() {
+        if(oauthType == OauthAccountType.MICROSOFT){
+            emitEffect(Effect.LaunchOAuthMicrosoft)
+        }else{
+            val result = getOAuthRequestIntent.execute(
+                hostname = state.value.hostname,
+                emailAddress = state.value.emailAddress,
+            )
+
+            when (result) {
+                AuthorizationIntentResult.NotSupported -> {
+                    updateState { state ->
+                        state.copy(
+                            error = Error.NotSupported,
+                        )
+                    }
+                }
+
+                is AuthorizationIntentResult.Success -> {
+                    emitEffect(Effect.LaunchOAuth(result.intent))
+                }
             }
         }
     }
@@ -91,25 +122,18 @@ class AccountOAuthViewModel(
             )
         }
         viewModelScope.launch {
-            when (val result = finishOAuthSignIn.execute(data)) {
-                AuthorizationResult.BrowserNotAvailable -> updateErrorState(Error.BrowserNotAvailable)
-                AuthorizationResult.Canceled -> updateErrorState(Error.Canceled)
-                is AuthorizationResult.Failure -> updateErrorState(Error.Unknown(result.error))
-                is AuthorizationResult.Success -> {
-                    updateState { state ->
-                        state.copy(isLoading = false)
-                    }
-                    navigateNext(authorizationState = result.state)
-                }
-            }
+            handleSignInResult(finishOAuthSignIn.execute(data))
         }
     }
 
-    private fun updateErrorState(error: Error) = updateState { state ->
-        state.copy(
-            error = error,
-            isLoading = false,
-        )
+    private fun updateErrorState(error: Error) {
+        val dataError = mutableListOf(SIGN_IN_ERROR to error.javaClass.simpleName)
+        if(error is Error.Unknown){
+            dataError.add(SIGN_IN_ERROR_CONTENT to (error.error.localizedMessage?: ""))
+        }
+
+        FirebaseUtil.logEvent(SIGN_IN_OUTLOOK, dataError.toTypedArray())
+        emitEffect(Effect.ShowError(error))
     }
 
     private fun navigateBack() = emitEffect(Effect.NavigateBack)

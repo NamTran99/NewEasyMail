@@ -4,6 +4,7 @@ import android.content.Intent
 import app.k9mail.core.ui.compose.common.mvi.UnidirectionalViewModel
 import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
+import app.k9mail.feature.account.oauth.domain.OauthAccountType
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 
 interface AccountOAuthContract {
@@ -19,7 +20,7 @@ interface AccountOAuthContract {
         val wizardNavigationBarState: WizardNavigationBarState = WizardNavigationBarState(
             isNextEnabled = false,
         ),
-        val isGoogleSignIn: Boolean = false,
+        val oauthAccountType: OauthAccountType? = null,
         val error: Error? = null,
         val isLoading: Boolean = false,
     )
@@ -39,6 +40,8 @@ interface AccountOAuthContract {
     }
 
     sealed interface Effect {
+        data object LaunchOAuthMicrosoft: Effect
+
         data class LaunchOAuth(
             val intent: Intent,
         ) : Effect
@@ -47,6 +50,10 @@ interface AccountOAuthContract {
             val state: AuthorizationState,
         ) : Effect
         data object NavigateBack : Effect
+
+        data class ShowError(
+            val message: Error,
+        ) : Effect
     }
 
     sealed interface Error {

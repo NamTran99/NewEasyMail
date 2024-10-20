@@ -8,6 +8,8 @@ import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 
+enum class OauthAccountType{GOOGLE, MICROSOFT}
+
 interface AccountOAuthDomainContract {
 
     interface UseCase {
@@ -19,8 +21,8 @@ interface AccountOAuthDomainContract {
             suspend fun execute(intent: Intent): AuthorizationResult
         }
 
-        fun interface CheckIsGoogleSignIn {
-            fun execute(hostname: String): Boolean
+        fun interface CheckAccountType {
+            fun execute(hostname: String): OauthAccountType?
         }
     }
 
@@ -34,6 +36,7 @@ interface AccountOAuthDomainContract {
         suspend fun getAuthorizationException(intent: Intent): AuthorizationException?
 
         suspend fun getExchangeToken(response: AuthorizationResponse): AuthorizationResult
+//        suspend fun getExchangeTokenMicrosoft(account: IAccount?): AuthorizationResult
     }
 
     fun interface AuthorizationStateRepository {
