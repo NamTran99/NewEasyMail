@@ -4,6 +4,7 @@ import android.content.Intent
 import app.k9mail.core.ui.compose.common.mvi.UnidirectionalViewModel
 import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
+import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 
 interface AccountOAuthContract {
 
@@ -28,10 +29,13 @@ interface AccountOAuthContract {
             val resultCode: Int,
             val data: Intent?,
         ) : Event
-
+        data class OnOAuthMicrosoftResult(
+            val result: AuthorizationResult,
+        ) : Event
+        data object OnOAuthMicrosoftClick :  Event
         data object SignInClicked : Event
         data object OnBackClicked : Event
-        object OnRetryClicked : Event
+        data object OnRetryClicked : Event
     }
 
     sealed interface Effect {

@@ -3,7 +3,7 @@
 #-dontobfuscate
 
 # Preserve the line number information for debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+#-keepattributes SourceFile,LineNumberTable
 
 # Library specific rules
 -dontnote android.net.http.*
@@ -61,5 +61,6 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
 -keep,allowshrinking class com.tokenautocomplete.TokenCompleteTextView
--keepclassmembers  class com.hungbang.email2018.data.entity.Account
--applymapping oldmapping.txt
+#-keepclassmembers class com.hungbang.email2018.f.c.a
+-keep class com.hungbang.email2018.f.c.a { *; }
+#-applymapping oldmapping6.txt

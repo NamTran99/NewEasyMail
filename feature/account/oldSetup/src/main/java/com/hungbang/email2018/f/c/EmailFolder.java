@@ -1,4 +1,4 @@
-package com.hungbang.email2018.data.entity;
+package com.hungbang.email2018.f.c;
 
 
 import java.io.Serializable;

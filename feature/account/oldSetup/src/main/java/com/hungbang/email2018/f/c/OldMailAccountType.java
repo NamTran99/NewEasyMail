@@ -1,4 +1,4 @@
-package com.hungbang.email2018.data.entity;
+package com.hungbang.email2018.f.c;
 
 public enum OldMailAccountType {
     GOOGLE(1), OUTLOOK(2), YANDEX(3);

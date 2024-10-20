@@ -1,6 +1,5 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import app.k9mail.autodiscovery.api.AuthenticationType
 import app.k9mail.autodiscovery.api.AutoDiscoveryResult
@@ -8,6 +7,9 @@ import app.k9mail.autodiscovery.api.ConnectionSecurity
 import app.k9mail.autodiscovery.api.ImapServerSettings
 import app.k9mail.autodiscovery.api.IncomingServerSettings
 import app.k9mail.autodiscovery.api.SmtpServerSettings
+import app.k9mail.core.android.common.data.FireBaseParam
+import app.k9mail.core.android.common.data.FireBaseScreenEvent
+import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.core.common.domain.usecase.validation.ValidationResult
 import app.k9mail.core.common.net.Hostname
 import app.k9mail.core.common.net.Port
@@ -23,12 +25,18 @@ import app.k9mail.feature.account.setup.domain.oldMail.EasyMailUtil
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.AutoDiscoveryUiResult
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep.GMAIL
+import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep.LIST_MAIL_SERVER
+import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep.OTHER
+import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep.OUTLOOK
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Effect
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Error
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Validator
-import com.hungbang.email2018.data.entity.OldMailAccountType
+import com.fsck.k9.K9
+import com.fsck.k9.helper.EmailHelper
+import com.hungbang.email2018.f.c.OldMailAccountType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -41,11 +49,10 @@ internal class AccountAutoDiscoveryViewModel(
     override val oAuthViewModel: AccountOAuthContract.ViewModel,
 ) : BaseViewModel<State, Event, Effect>(initialState), AccountAutoDiscoveryContract.ViewModel {
 
-    init {
-        convertLocalConfig()
-    }
 
     private var oldSignature: String? = null
+    private var isReLogin: Boolean = false
+    private val savedAccount = EasyMailUtil.getSavedAccountFromEasyMail()
 
     override fun event(event: Event) {
         when (event) {
@@ -53,21 +60,7 @@ internal class AccountAutoDiscoveryViewModel(
             is Event.PasswordChanged -> changePassword(event.password)
             is Event.OnOAuthResult -> onOAuthResult(event.result)
             is Event.OnSelectServer -> {
-                accountStateRepository.clear()
-                updateState {
-                    it.copy(
-                        emailAddress = StringInputField(),
-                        password = StringInputField(),
-                        configStep = event.state,
-                        autoDiscoverySettings = if (event.state == ConfigStep.OTHER) null else it.autoDiscoverySettings,
-                        isShowToolbar = event.state == ConfigStep.OTHER,
-                        isNextButtonVisible = event.state == ConfigStep.OTHER,
-                    )
-                }
-                setUpMailServerConfig(event.state)
-                if (event.state in listOf(GMAIL, ConfigStep.OUTLOOK)) {
-                    oAuthViewModel.event(AccountOAuthContract.Event.SignInClicked)
-                }
+                selectServer(event.state)
             }
 
             Event.OnNextClicked -> onNext()
@@ -82,17 +75,74 @@ internal class AccountAutoDiscoveryViewModel(
             }
 
             Event.OnScreenShown -> {
-                with(state.value) {
-                    if (configStep == ConfigStep.LIST_MAIL_SERVER && isReLogin) {
-                        updateState {
-                            copy(isReLogin = false)
-                        }
-                        submitPassword()
+//                if (!K9.isCheckReLogin) {
+                if(true){
+                    viewModelScope.launch(Dispatchers.Main) {
+                        checkIfHaveDataOldAccount()
+                        K9.isCheckReLogin = true
+                        K9.saveSettingsAsync()
+                    }
+                }
+            }
+
+            Event.OnReLoginClicked -> {
+                viewModelScope.launch(Dispatchers.Main) {
+                    val step = savedAccount?.b?.let { OldMailAccountType.fromInt(it).conVertAccountTypeToConfigStep() }
+                    if (step == OTHER) {
+                        requestReLoginWithPass()
+                    } else {
+                        requestToReLoginMicrosoft()
                     }
                 }
             }
         }
     }
+
+    private fun requestToReLoginMicrosoft() {
+        selectServer(OUTLOOK)
+    }
+
+    private fun checkIfHaveDataOldAccount() {
+        if (savedAccount != null) {
+            emitEffect(Effect.ShowDialogReLogin)
+            oldSignature = savedAccount.i
+        }
+    }
+
+    private fun selectServer(step: ConfigStep) {
+        clearData()
+        updateState {
+            it.copy(
+                emailAddress = StringInputField(),
+                password = StringInputField(),
+                configStep = step,
+                autoDiscoverySettings = if (step == OTHER) null else it.autoDiscoverySettings,
+                isShowToolbar = step == OTHER,
+                isNextButtonVisible = step == OTHER,
+            )
+        }
+        setUpMailServerConfig(step)
+
+        if (step  ==  ConfigStep.OUTLOOK) {
+            oAuthViewModel.event(AccountOAuthContract.Event.OnOAuthMicrosoftClick)
+        }
+
+        if(step != LIST_MAIL_SERVER){
+            FirebaseUtil.logEvent(FireBaseScreenEvent.SIGN_IN + step.name, arrayOf(FireBaseParam.SIGN_IN_TYPE to step.name))
+        }
+    }
+
+    private fun clearData() {
+        accountStateRepository.clear()
+        updateState {
+            it.copy(
+                password = StringInputField(),
+                autoDiscoverySettings = null,
+                authorizationState = null,
+            )
+        }
+    }
+
 
     private fun OldMailAccountType.conVertAccountTypeToConfigStep(): ConfigStep {
         return when (this) {
@@ -102,51 +152,48 @@ internal class AccountAutoDiscoveryViewModel(
         }
     }
 
-    private fun convertLocalConfig() {
-
-        val savedAccount = EasyMailUtil.getSavedAccountFromEasyMail()
-        val savedMailSigning = EasyMailUtil.getSavedSignInConfigFromEasyMail(savedAccount?.accountEmail)
-
-        if (savedAccount != null) {
-            accountStateRepository.clear()
-            oldSignature = savedAccount.signature
+    private suspend fun requestReLoginWithPass() {
+        isReLogin = true
+        accountStateRepository.clear()
+        savedAccount?.let {
+            updateState {
+                it.copy(
+                    configStep = OTHER,
+                    emailAddress = StringInputField(savedAccount.a),
+                    password = StringInputField(savedAccount.h),
+                )
+            }
+            val savedMailSigning =
+                EasyMailUtil.getSavedSignInConfigFromEasyMail(EmailHelper.getDomainFromEmailAddress(savedAccount.a))
             if (savedMailSigning != null) {
+                FirebaseUtil.logEvent(FireBaseScreenEvent.SAVED_CONFIG_FOUND)
                 val result = AutoDiscoveryResult.Settings(
                     incomingServerSettings = ImapServerSettings(
                         hostname = Hostname(savedMailSigning.imap_host),
                         port = Port(savedMailSigning.imap_port.toInt()),
                         connectionSecurity = ConnectionSecurity.TLS,
                         authenticationTypes = listOf(AuthenticationType.PasswordCleartext),
-                        username = savedAccount.accountEmail,
+                        username = it.a,
                     ),
                     outgoingServerSettings = SmtpServerSettings(
                         hostname = Hostname(savedMailSigning.smtp_host),
                         port = Port(savedMailSigning.smtp_port.toInt()),
                         connectionSecurity = if (savedMailSigning.isSmtpStartTLS()) ConnectionSecurity.StartTLS else ConnectionSecurity.TLS,
                         authenticationTypes = listOf(AuthenticationType.PasswordCleartext),
-                        username = savedAccount.accountEmail,
+                        username = savedAccount.a,
                     ),
                     source = "",
                 )
-
-
                 updateAutoDiscoverySettings(result)
-            }else{
-                setUpMailServerConfig(savedAccount.getAccountTypeFromInt().conVertAccountTypeToConfigStep())
-            }
-
-            updateState {
-                it.copy(
-                    isReLogin = true,
-                    configStep = ConfigStep.LIST_MAIL_SERVER,
-                    emailAddress = StringInputField(savedAccount.accountEmail),
-                    password = StringInputField(savedAccount.password ?: ""),
-                )
+            } else {
+                FirebaseUtil.logEvent(FireBaseScreenEvent.SAVED_CONFIG_NULL)
+                if (!savedAccount.h.isNullOrBlank()) {
+                    submitEmail()
+                }
             }
         }
 
     }
-
 
 
     private fun setUpMailServerConfig(mailState: ConfigStep) {
@@ -155,7 +202,7 @@ internal class AccountAutoDiscoveryViewModel(
     }
 
     private fun changeEmailAddress(emailAddress: String) {
-        accountStateRepository.clear()
+        clearData()
         updateState {
             it.copy(
                 emailAddress = StringInputField(value = emailAddress),
@@ -173,22 +220,8 @@ internal class AccountAutoDiscoveryViewModel(
 
     private fun onNext() {
         when (state.value.configStep) {
-            ConfigStep.LIST_MAIL_SERVER ->
-                if (state.value.error != null) {
-                    updateState {
-                        it.copy(
-                            error = null,
-                            configStep = ConfigStep.PASSWORD,
-                        )
-                    }
-                } else {
-                    submitEmail()
-                }
-
-            ConfigStep.PASSWORD -> submitPassword()
-            ConfigStep.MANUAL_SETUP -> navigateNext(isAutomaticConfig = false)
+            ConfigStep.LIST_MAIL_SERVER -> Unit
             ConfigStep.OTHER -> {
-
                 submitEmail()
             }
 
@@ -196,62 +229,52 @@ internal class AccountAutoDiscoveryViewModel(
         }
     }
 
-    private fun onRetry() {
+    private fun onRetry()= viewModelScope.launch {
         updateState {
             it.copy(error = null)
         }
         loadAutoDiscovery()
     }
 
-    private fun submitEmail() {
+    private fun submitEmail()= viewModelScope.launch {
         with(state.value) {
             val emailValidationResult = validator.validateEmailAddress(emailAddress.value)
-            val hasError = emailValidationResult is ValidationResult.Failure
+            val passwordValidationResult = validator.validatePassword(password.value)
+            val hasError = listOf(
+                emailValidationResult,
+                passwordValidationResult,
+            ).any { it is ValidationResult.Failure }
 
             updateState {
                 it.copy(
                     emailAddress = it.emailAddress.updateFromValidationResult(emailValidationResult),
+                    password = it.password.updateFromValidationResult(passwordValidationResult),
                 )
             }
+
 
             if (!hasError) {
-                if (state.value.configStep == ConfigStep.YANDEX) {
-                    submitPassword()
-                } else
+                if (state.value.configStep == ConfigStep.OTHER) {
                     loadAutoDiscovery()
+                } else {
+                    navigateNext(state.value.autoDiscoverySettings != null)
+                }
             }
         }
     }
 
-    private fun loadAutoDiscovery() {
-        viewModelScope.launch {
-            updateState {
-                it.copy(
-                    isLoading = true,
-                )
-            }
-
-            when (val result = getAutoDiscovery.execute(state.value.emailAddress.value)) {
-                AutoDiscoveryResult.NoUsableSettingsFound -> updateNoSettingsFound()
-                is AutoDiscoveryResult.Settings -> updateAutoDiscoverySettings(result)
-                is AutoDiscoveryResult.NetworkError -> updateError(Error.NetworkError)
-                is AutoDiscoveryResult.UnexpectedException -> updateError(Error.UnknownError)
-            }
-
-            if (state.value.configStep == ConfigStep.OTHER) {
-                submitPassword()
-            }
-        }
-    }
-
-
-    private fun updateNoSettingsFound() {
+    private suspend fun loadAutoDiscovery() {
         updateState {
             it.copy(
-                isLoading = false,
-                autoDiscoverySettings = null,
-                configStep = ConfigStep.MANUAL_SETUP,
+                isLoading = true,
             )
+        }
+
+        when (val result = getAutoDiscovery.execute(state.value.emailAddress.value)) {
+            AutoDiscoveryResult.NoUsableSettingsFound -> updateError(Error.NoUsableSettingsError)
+            is AutoDiscoveryResult.Settings -> updateAutoDiscoverySettings(result)
+            is AutoDiscoveryResult.NetworkError -> updateError(Error.NetworkError)
+            is AutoDiscoveryResult.UnexpectedException -> updateError(Error.UnknownError)
         }
     }
 
@@ -275,9 +298,28 @@ internal class AccountAutoDiscoveryViewModel(
                 isNextButtonVisible = !isOAuth,
             )
         }
+
+        if (state.value.configStep == ConfigStep.OTHER) {
+            navigateNext(state.value.autoDiscoverySettings != null)
+        }
     }
 
     private fun updateError(error: Error) {
+        val dataError = mutableListOf(
+            FireBaseParam.SIGN_IN_ERROR to error.javaClass.simpleName,
+            FireBaseParam.SIGN_IN_RE_LOGIN to isReLogin.toString(),
+        )
+        if (error is Error.NoUsableSettingsError) {
+            with(state.value) {
+                dataError.add(FireBaseParam.SIGN_IN_EMAIL to emailAddress.toString())
+            }
+        }
+
+        FirebaseUtil.logEvent(
+            FireBaseScreenEvent.FIND_SERVER_ERROR,
+            dataError.toTypedArray(),
+        )
+
         updateState {
             it.copy(
                 isLoading = false,
@@ -314,8 +356,17 @@ internal class AccountAutoDiscoveryViewModel(
     }
 
     private fun onBack() {
+        with(state.value) {
+            if (error != null) {
+                // back
+                updateState {
+                    it.copy(error = null, configStep = ConfigStep.OTHER)
+                }
+                return
+            }
+        }
         when (state.value.configStep) {
-            ConfigStep.LIST_MAIL_SERVER -> {
+            LIST_MAIL_SERVER -> {
                 if (state.value.error != null) {
                     updateState {
                         it.copy(error = null)
@@ -326,25 +377,23 @@ internal class AccountAutoDiscoveryViewModel(
             }
 
             ConfigStep.OAUTH,
-            ConfigStep.PASSWORD,
-            ConfigStep.MANUAL_SETUP,
-            -> updateState {
-                it.copy(
-                    configStep = ConfigStep.LIST_MAIL_SERVER,
-                    password = StringInputField(),
-                    isNextButtonVisible = true,
-                    isShowToolbar = false,
-                )
-            }
-
-            ConfigStep.YANDEX, GMAIL, ConfigStep.OUTLOOK, ConfigStep.OTHER -> {
+            -> {
                 updateState {
                     it.copy(
-                        configStep = ConfigStep.LIST_MAIL_SERVER,
+                        configStep = LIST_MAIL_SERVER,
+                    )
+                }
+            }
+
+            else -> {
+                updateState {
+                    it.copy(
+                        configStep = LIST_MAIL_SERVER,
                         isShowToolbar = false,
                     )
                 }
             }
+
         }
     }
 

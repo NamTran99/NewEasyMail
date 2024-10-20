@@ -149,6 +149,9 @@ object K9 : EarlyInit {
     var isConfirmMarkAllRead = true
 
     @JvmStatic
+    var isCheckReLogin = false
+
+    @JvmStatic
     var notificationQuickDeleteBehaviour = NotificationQuickDelete.ALWAYS
 
     @JvmStatic
@@ -328,6 +331,7 @@ object K9 : EarlyInit {
             storage.getEnum("messageViewPostMarkAsUnreadAction", PostMarkAsUnreadNavigation.ReturnToMessageList)
         isHideUserAgent = storage.getBoolean("hideUserAgent", false)
         isHideTimeZone = storage.getBoolean("hideTimeZone", false)
+        isCheckReLogin = storage.getBoolean("isCheckReLogin", false)
 
         isConfirmDelete = storage.getBoolean("confirmDelete", false)
         isConfirmDiscardMessage = storage.getBoolean("confirmDiscardMessage", true)
@@ -409,6 +413,7 @@ object K9 : EarlyInit {
         editor.putBoolean("confirmSpam", isConfirmSpam)
         editor.putBoolean("confirmDeleteFromNotification", isConfirmDeleteFromNotification)
         editor.putBoolean("confirmMarkAllRead", isConfirmMarkAllRead)
+        editor.putBoolean("isCheckReLogin", isCheckReLogin)
 
         editor.putEnum("sortTypeEnum", sortType)
         editor.putBoolean("sortAscending", sortAscending[sortType] ?: false)

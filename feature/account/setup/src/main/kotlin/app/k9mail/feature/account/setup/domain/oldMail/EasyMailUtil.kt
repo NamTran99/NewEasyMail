@@ -1,40 +1,36 @@
 package app.k9mail.feature.account.setup.domain.oldMail
 
-import com.hungbang.email2018.data.entity.Account
-import com.hungbang.email2018.data.entity.SignInConfigs
-import io.paperdb.Paper
+import app.k9mail.core.android.common.data.FirebaseUtil
+import com.hungbang.email2018.f.c.SignInConfigs
+import com.hungbang.email2018.f.c.a
 
 object EasyMailUtil {
     /**
      * used to get account email & password
      */
-    fun getSavedAccountFromEasyMail(): Account? {
-        return Paper.book().read<Account>("CURRENT_ACCOUNT", null)
-//        val fakeAcc = Account(
-//            accountType = 3,
-//            accountEmail = "trandinhnam1199@yandex.com",
-//            password = "sbfksbfprvricpvk",
-//            signature = "This is signature")
-//
-//
-//        return fakeAcc
+    fun getSavedAccountFromEasyMail(): a? {
+//            return Paper.book().read<a>("CURRENT_ACCOUNT", null)
+        val fakeAcc = a(
+            "trandinhnam1199@yandex.com",
+            3,
+            "sbfksbfprvricpvk",
+            "This is signature",
+        )
+        return fakeAcc
     }
 
     /**
      * used to get host, port...
      */
-    fun getSavedSignInConfigFromEasyMail(mailDomain: String?): SignInConfigs? {
-        val fakeConfigs = SignInConfigs(
-            mailDomain ?: "",
-            "mail.mailo.com",
-            "993",
-            "1",
-            "mail.mailo.com",
-            "465",
-            "0",
-        )
-//        return fakeConfigs
-        return Paper.book().read<SignInConfigs>("KEY_CONFIG_SIGNIN$mailDomain", null)
+    suspend fun getSavedSignInConfigFromEasyMail(mailDomain: String?): SignInConfigs? {
+        if (mailDomain == null) {
+            return null
+        }
+        return try {
+            FirebaseUtil.getSignInConfigFromFirebase(mailDomain)
+        } catch (e: Exception) {
+            null
+        }
     }
 
 //    fun testGetSavedDataFromEasyMail(){

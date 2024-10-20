@@ -18,6 +18,7 @@ dependencies {
 
     implementation(projects.feature.autodiscovery.service)
     implementation(projects.feature.autodiscovery.demo)
+    implementation(projects.legacy.core)
 
     api(projects.feature.account.common)
     implementation(projects.feature.account.oauth)

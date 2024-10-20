@@ -73,4 +73,7 @@
     <string name="account_setup_manual_configuration">Manual configuration</string>
     <string name="account_setup_application_homepage">Application\'s homepage</string>
     <string name="account_setup_privacy_policy">Privacy policy</string>
+    <string name="account_setup_relogin_required_title">Session Timeout</string>
+    <string name="account_setup_relogin_required_content">Please log in again to ensure the best experience. We sincerely apologize for this inconvenience.</string>
+
 </resources>

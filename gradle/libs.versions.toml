@@ -101,7 +101,7 @@ datastoreCoreAndroid = "1.1.1"
 accompanistPermission = "0.35.1-alpha"
 lifecycleCommonJvm = "2.8.4"
 junitJunit = "4.12"
-
+firebaseBom = "33.4.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -244,6 +244,13 @@ androidx-datastore-core-android = { group = "androidx.datastore", name = "datast
 accompanist-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermission" }
 androidx-lifecycle-common-jvm = { group = "androidx.lifecycle", name = "lifecycle-common-jvm", version.ref = "lifecycleCommonJvm" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx"}
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics"}
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+
 
 [bundles]
 shared-jvm-main = [

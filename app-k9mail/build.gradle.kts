@@ -47,8 +47,8 @@ android {
 //        applicationId = "com.hungbang.email2018"
         testApplicationId = "email.swift.ai.smart.allmail"
 
-        versionCode = 216
-        versionName = "216"
+        versionCode = 226
+        versionName = "226"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
@@ -111,17 +111,11 @@ android {
     }
 
     signingConfigs {
-        if (project.hasProperty("swiftmail.keyAlias") &&
-            project.hasProperty("swiftmail.keyPassword") &&
-            project.hasProperty("swiftmail.storeFile") &&
-            project.hasProperty("swiftmail.storePassword")
-        ) {
-            create("release") {
-                keyAlias = project.property("swiftmail.keyAlias") as String
-                keyPassword = project.property("swiftmail.keyPassword") as String
-                storeFile = file(project.property("swiftmail.storeFile") as String)
-                storePassword = project.property("swiftmail.storePassword") as String
-            }
+        create("release") {
+            keyAlias = "androidkey"
+            keyPassword = "android"
+            storePassword = "android"
+            storeFile = file("essy_mail_release.jks")
         }
     }
 
@@ -142,7 +136,7 @@ android {
             enableUnitTestCoverage = testCoverageEnabled
             enableAndroidTestCoverage = testCoverageEnabled
 
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = true
 

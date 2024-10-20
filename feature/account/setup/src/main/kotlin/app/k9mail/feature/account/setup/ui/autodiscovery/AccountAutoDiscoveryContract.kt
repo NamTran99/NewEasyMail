@@ -19,9 +19,7 @@ interface AccountAutoDiscoveryContract {
         YANDEX,
         GMAIL,
         OUTLOOK,
-        OTHER,
-        PASSWORD,
-        MANUAL_SETUP;
+        OTHER;
 
         fun getDrawable(): Int?{
             return when(this){
@@ -73,6 +71,7 @@ interface AccountAutoDiscoveryContract {
         data object OnRetryClicked : Event
         data object OnManualConfigurationClicked : Event
         data object OnScreenShown : Event
+        data object OnReLoginClicked : Event
     }
 
     sealed class Effect {
@@ -81,6 +80,7 @@ interface AccountAutoDiscoveryContract {
         ) : Effect()
 
         data object NavigateBack : Effect()
+        data object ShowDialogReLogin : Effect()
     }
 
     interface Validator {
@@ -90,6 +90,7 @@ interface AccountAutoDiscoveryContract {
     }
 
     sealed interface Error {
+        data object NoUsableSettingsError : Error
         data object NetworkError : Error
         data object UnknownError : Error
     }

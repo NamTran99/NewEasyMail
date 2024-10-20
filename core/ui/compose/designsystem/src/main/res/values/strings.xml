@@ -5,4 +5,7 @@
     <string name="designsystem_molecule_email_address_input_label">Email address</string>
     <string name="designsystem_molecule_password_input_label">Password</string>
     <string name="designsystem_molecule_error_view_button_retry">Retry</string>
+    <string name="designsystem_cancel">Cancel</string>
+    <string name="designsystem_molecule_button_back">Back</string>
+    <string name="designsystem_molecule_button_re_login">OK</string>
 </resources>
