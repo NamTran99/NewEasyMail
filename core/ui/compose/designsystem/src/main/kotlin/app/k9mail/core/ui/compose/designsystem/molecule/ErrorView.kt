@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.k9mail.core.ui.compose.designsystem.R
+import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonOutlined
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonText
 import app.k9mail.core.ui.compose.designsystem.atom.icon.Icon
 import app.k9mail.core.ui.compose.designsystem.atom.icon.Icons
@@ -27,6 +28,7 @@ fun ErrorView(
     modifier: Modifier = Modifier,
     message: String? = null,
     onRetry: (() -> Unit)? = null,
+    onBack: (() -> Unit)? = null,
     contentAlignment: Alignment = Alignment.Center,
 ) {
     Box(
@@ -68,6 +70,10 @@ fun ErrorView(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
+                    ButtonOutlined(
+                        text = stringResource(id = R.string.designsystem_molecule_button_back),
+                        onClick = { onBack?.invoke() },
+                    )
                     ButtonText(
                         text = stringResource(id = R.string.designsystem_molecule_error_view_button_retry),
                         onClick = onRetry,

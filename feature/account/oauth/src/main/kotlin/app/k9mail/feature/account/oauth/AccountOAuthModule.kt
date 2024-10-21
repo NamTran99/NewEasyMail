@@ -5,7 +5,7 @@ import app.k9mail.feature.account.oauth.data.AuthorizationRepository
 import app.k9mail.feature.account.oauth.data.AuthorizationStateRepository
 import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract
 import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract.UseCase
-import app.k9mail.feature.account.oauth.domain.usecase.CheckIsGoogleSignIn
+import app.k9mail.feature.account.oauth.domain.usecase.CheckAccountType
 import app.k9mail.feature.account.oauth.domain.usecase.FinishOAuthSignIn
 import app.k9mail.feature.account.oauth.domain.usecase.GetOAuthRequestIntent
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
@@ -44,7 +44,7 @@ val featureAccountOAuthModule: Module = module {
 
     factory<UseCase.FinishOAuthSignIn> { FinishOAuthSignIn(repository = get()) }
 
-    factory<UseCase.CheckIsGoogleSignIn> { CheckIsGoogleSignIn() }
+    factory<UseCase.CheckAccountType> { CheckAccountType() }
 
     factory<AccountOAuthContract.ViewModel> {
         AccountOAuthViewModel(

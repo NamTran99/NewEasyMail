@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.k9mail.feature.account.oauth.R
+import app.k9mail.feature.account.oauth.domain.OauthAccountType
 import androidx.compose.material3.Button as Material3Button
 
 /**
@@ -34,12 +35,16 @@ import androidx.compose.material3.Button as Material3Button
  */
 @Suppress("LongMethod")
 @Composable
-fun SignInWithGoogleButton(
+fun SignInWithOauthServerButton(
+    oauthType: OauthAccountType,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isDark: Boolean = isSystemInDarkTheme(),
 ) {
+    val icon = if (oauthType == OauthAccountType.MICROSOFT) R.drawable.account_oauth_ic_microsoft_logo else R.drawable.account_oauth_ic_google_logo
+    val content = if (oauthType == OauthAccountType.MICROSOFT) R.string.account_oauth_sign_in_with_Microsoft_button else R.string.account_oauth_sign_in_with_google_button
+
     Material3Button(
         onClick = onClick,
         modifier = modifier,
@@ -63,7 +68,7 @@ fun SignInWithGoogleButton(
                     ),
                 )
                 .padding(
-                    end = 8.dp,
+                    horizontal = 8.dp,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -74,7 +79,7 @@ fun SignInWithGoogleButton(
                     modifier = Modifier
                         .padding(8.dp),
                     painter = painterResource(
-                        id = R.drawable.account_oauth_ic_google_logo,
+                        id =icon
                     ),
                     contentDescription = "Google logo",
                     tint = Color.Unspecified,
@@ -83,7 +88,7 @@ fun SignInWithGoogleButton(
             Spacer(modifier = Modifier.requiredWidth(8.dp))
             Text(
                 text = stringResource(
-                    id = R.string.account_oauth_sign_in_with_google_button,
+                    id = content
                 ),
                 style = TextStyle(
                     fontWeight = FontWeight.Medium,
@@ -121,3 +126,4 @@ private fun getTextColor(isDark: Boolean): Color {
         Color(0x87000000)
     }
 }
+

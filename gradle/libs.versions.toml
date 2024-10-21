@@ -66,6 +66,7 @@ jmapClient = "0.3.1"
 jsoup = "1.17.2"
 junit = "4.13.2"
 jutf7 = "1.0.0"
+jwtdecode = "2.0.2"
 jzlib = "1.0.7"
 koinBom = "3.5.6"
 kotlinBom = "2.0.0"
@@ -102,6 +103,8 @@ accompanistPermission = "0.35.1-alpha"
 lifecycleCommonJvm = "2.8.4"
 junitJunit = "4.12"
 firebaseBom = "33.4.0"
+msal = "5.6.0"
+gson = "2.11.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -197,6 +200,7 @@ jmap-client = { module = "rs.ltt.jmap:jmap-client", version.ref = "jmapClient" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { module = "junit:junit", version.ref = "junit" }
 jutf7 = { module = "com.beetstra.jutf7:jutf7", version.ref = "jutf7" }
+jwtdecode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtdecode" }
 jzlib = { module = "com.jcraft:jzlib", version.ref = "jzlib" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
 koin-core = { module = "io.insert-koin:koin-core" }
@@ -250,6 +254,8 @@ firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics"}
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+msal = { module = "com.microsoft.identity.client:msal", version.ref = "msal" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 
 [bundles]

@@ -4,5 +4,6 @@ plugins {
 }
 
 dependencies {
+    api (libs.gson)
     testImplementation(projects.core.testing)
 }

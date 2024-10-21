@@ -24,6 +24,7 @@ internal fun AccountAutoDiscoveryContract.Error.toAutoDiscoveryErrorString(resou
     return when (this) {
         AccountAutoDiscoveryContract.Error.NetworkError -> resources.getString(R.string.account_setup_error_network)
         AccountAutoDiscoveryContract.Error.UnknownError -> resources.getString(R.string.account_setup_error_unknown)
+        AccountAutoDiscoveryContract.Error.NoUsableSettingsError -> resources.getString(R.string.account_setup_error_not_available_server)
     }
 }
 

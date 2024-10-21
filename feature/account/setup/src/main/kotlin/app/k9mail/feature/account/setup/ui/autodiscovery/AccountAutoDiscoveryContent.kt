@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -24,6 +25,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -34,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import app.k9mail.core.ui.compose.common.activity.LocalActivity
 import app.k9mail.core.ui.compose.common.mvi.observe
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonFilled
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonText
@@ -49,13 +56,17 @@ import app.k9mail.core.ui.compose.designsystem.organism.TopAppBarWithBackButton
 import app.k9mail.core.ui.compose.designsystem.template.ResponsiveWidthContainer
 import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.account.common.ui.loadingerror.rememberContentLoadingErrorViewState
+import app.k9mail.feature.account.oauth.data.microsoft.IMicrosoftSignIn
 import app.k9mail.feature.account.oauth.domain.entity.OAuthResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect
+import app.k9mail.feature.account.oauth.ui.toResourceString
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import app.k9mail.feature.account.setup.ui.autodiscovery.view.ListMailLoginView
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 internal fun AccountAutoDiscoveryContent(
@@ -109,18 +120,41 @@ internal fun AutoDiscoveryContent(
     modifier: Modifier = Modifier,
 ) {
     val resources = LocalContext.current.resources
+    val context = LocalContext.current
 
     val oAuthLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) {
         oAuthViewModel.event(AccountOAuthContract.Event.OnOAuthResult(it.resultCode, it.data))
     }
+    val scope = rememberCoroutineScope()
+    var isShowLoadingOauth by remember {
+        mutableStateOf(false)
+    }
+    val activity = LocalActivity.current
+    val microsoftSignIn: IMicrosoftSignIn = koinInject()
 
     oAuthViewModel.observe { effect ->
         when (effect) {
             is Effect.NavigateNext -> onEvent(Event.OnOAuthResult(OAuthResult.Success(effect.state)))
             is Effect.NavigateBack -> onEvent(Event.OnOAuthResult(OAuthResult.Failure))
             is Effect.LaunchOAuth -> oAuthLauncher.launch(effect.intent)
+            Effect.LaunchOAuthMicrosoft -> {
+                isShowLoadingOauth = true
+                scope.launch {
+                    oAuthViewModel.event(
+                        AccountOAuthContract.Event.OnOAuthMicrosoftResult(
+                            microsoftSignIn.requestLogin(
+                                context = activity,
+                            ),
+                        ),
+                    )
+                    isShowLoadingOauth = false
+                }
+            }
+            is Effect.ShowError -> {
+                Toast.makeText(context, effect.message.toResourceString(context.resources), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

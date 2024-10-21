@@ -21,10 +21,10 @@ internal fun AccountOAuthContent(
     state: State,
     onEvent: (Event) -> Unit,
     modifier: Modifier = Modifier,
+    onBackClick: (() -> Unit)? = null ,
     isEnabled: Boolean = true,
 ) {
     val resources = LocalContext.current.resources
-
     Column(
         modifier = Modifier
             .testTag("AccountOAuthContent")
@@ -40,11 +40,13 @@ internal fun AccountOAuthContent(
                 title = stringResource(id = R.string.account_oauth_loading_error),
                 message = state.error.toResourceString(resources),
                 onRetry = { onEvent(Event.OnRetryClicked) },
+                onBack = onBackClick ,
             )
         } else {
             SignInView(
-                onSignInClick = { onEvent(Event.SignInClicked) },
-                isGoogleSignIn = state.isGoogleSignIn,
+                onSignInClick = {
+                    onEvent(Event.SignInClicked) },
+                oauthType = state.oauthAccountType,
                 isEnabled = isEnabled,
             )
         }

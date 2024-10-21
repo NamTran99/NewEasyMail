@@ -3,6 +3,8 @@
 
     <string name="account_setup_error_network">Network </string>
     <string name="account_setup_error_unknown">Unknown error</string>
+    <string name="account_setup_error_not_available_server">Can\'t find any server mail match your address</string>
+
 
     <string name="account_setup_auto_discovery_validation_error_email_address_required">Email address is required.</string>
     <string name="account_setup_auto_discovery_validation_error_email_address_not_allowed">This email address is not allowed.</string>
