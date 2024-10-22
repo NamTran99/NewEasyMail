@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.appauth)
 
     implementation(libs.glide)
+    implementation(project(":feature:account:oauth"))
     annotationProcessor(libs.glide.compiler)
 
     if (project.hasProperty("k9mail.enableLeakCanary") && project.property("k9mail.enableLeakCanary") == "true") {

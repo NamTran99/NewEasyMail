@@ -25,7 +25,7 @@ class CreateAccount(
             emailAddress = accountState.emailAddress!!,
             incomingServerSettings = accountState.incomingServerSettings!!.copy(),
             outgoingServerSettings = accountState.outgoingServerSettings!!.copy(),
-            authorizationState = accountState.authorizationState?.value,
+            authorizationState = accountState.authorizationState,
             specialFolderSettings = accountState.specialFolderSettings,
             options = mapOptions(accountState.displayOptions!!,defaultSynOptions),
         )

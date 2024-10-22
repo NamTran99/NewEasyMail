@@ -2,7 +2,7 @@ package app.k9mail.feature.account.oauth.ui
 
 import app.k9mail.core.ui.compose.testing.ComposeTest
 import app.k9mail.core.ui.compose.testing.setContentWithTheme
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.entity.OAuthResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.State

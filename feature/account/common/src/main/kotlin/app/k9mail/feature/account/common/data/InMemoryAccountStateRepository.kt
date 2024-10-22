@@ -1,12 +1,11 @@
 package app.k9mail.feature.account.common.data
 
-import android.util.Log
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.AccountDisplayOptions
 import app.k9mail.feature.account.common.domain.entity.AccountState
 import app.k9mail.feature.account.common.domain.entity.AccountSyncOptions
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
+import com.fsck.k9.entity.AuthorizationState
 import com.fsck.k9.mail.ServerSettings
 import com.fsck.k9.mail.oauth.AuthStateStorage
 
@@ -55,11 +54,11 @@ class InMemoryAccountStateRepository(
         state = AccountState()
     }
 
-    override fun getAuthorizationState(): String? {
-        return state.authorizationState?.value
+    override fun getAuthorizationState(): AuthorizationState? {
+        return state.authorizationState
     }
 
-    override fun updateAuthorizationState(authorizationState: String?) {
-        state = state.copy(authorizationState = AuthorizationState(authorizationState))
+    override fun updateAuthorizationState(authorizationState: AuthorizationState?) {
+        state = state.copy(authorizationState = authorizationState)
     }
 }

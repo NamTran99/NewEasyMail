@@ -1,7 +1,7 @@
 package app.k9mail.feature.account.oauth.domain.usecase
 
 import android.content.Intent
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.FakeAuthorizationRepository
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 import assertk.assertThat

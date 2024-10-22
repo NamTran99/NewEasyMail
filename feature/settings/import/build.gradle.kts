@@ -27,4 +27,5 @@ dependencies {
     implementation(libs.fastadapter)
 
     implementation(libs.timber)
+    implementation(project(":feature:account:common"))
 }

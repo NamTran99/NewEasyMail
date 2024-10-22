@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1064578777272",
+    "firebase_url": "https://emailforoutlook-65c15.firebaseio.com",
+    "project_id": "emailforoutlook-65c15",
+    "storage_bucket": "emailforoutlook-65c15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064578777272:android:48792f730bda323468744d",
+        "android_client_info": {
+          "package_name": "com.mail.emailapp.easymail2018"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064578777272-n7fu8mbo39jepeqicv5gfiodo8ntsltu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgFuWQ9Rd0-eu8phPMfU6qET0Mm3YmL2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064578777272-n7fu8mbo39jepeqicv5gfiodo8ntsltu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

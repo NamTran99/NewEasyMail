@@ -3,7 +3,7 @@ package com.fsck.k9.account
 import app.k9mail.core.common.mail.Protocols
 import app.k9mail.feature.account.common.AccountCommonExternalContract
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import com.fsck.k9.Account
 import com.fsck.k9.backends.toImapServerSettings
 import com.fsck.k9.logging.Timber
@@ -42,7 +42,7 @@ class AccountStateLoader(
             emailAddress = account.email,
             incomingServerSettings = account.incomingServerSettingsExtra,
             outgoingServerSettings = account.outgoingServerSettings,
-            authorizationState = AuthorizationState(account.oAuthState),
+            authorizationState = account.oAuthState,
         )
     }
 }

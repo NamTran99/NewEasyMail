@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.commons.io)
     implementation(libs.moshi)
+    implementation(libs.gson)
 
     // We're only using this for its DefaultHostnameVerifier
     implementation(libs.apache.httpclient5)

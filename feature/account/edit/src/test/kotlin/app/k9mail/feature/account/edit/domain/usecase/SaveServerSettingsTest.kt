@@ -3,7 +3,7 @@ package app.k9mail.feature.account.edit.domain.usecase
 import app.k9mail.feature.account.common.domain.entity.AccountDisplayOptions
 import app.k9mail.feature.account.common.domain.entity.AccountState
 import app.k9mail.feature.account.common.domain.entity.AccountSyncOptions
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.common.domain.entity.MailConnectionSecurity
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterFailure
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterResult

@@ -1,7 +1,7 @@
 package com.fsck.k9.account
 
 import app.k9mail.core.common.mail.Protocols
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.edit.AccountEditExternalContract
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterFailure
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterResult
@@ -67,7 +67,7 @@ class AccountServerSettingsUpdater(
             account.outgoingServerSettings = serverSettings
         }
 
-        account.oAuthState = authorizationState?.value
+        account.oAuthState = authorizationState
 
         accountManager.saveAccount(account)
 

@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.mime4j.core)
     implementation(libs.mime4j.dom)
+    implementation(project(":feature:account:common"))
 
     testApi(projects.core.testing)
     testApi(projects.core.android.testing)

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import app.cash.turbine.testIn
 import app.k9mail.core.ui.compose.testing.MainDispatcherRule
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationIntentResult
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect

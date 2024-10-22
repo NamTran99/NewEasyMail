@@ -1,7 +1,7 @@
 package com.fsck.k9.account
 
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull

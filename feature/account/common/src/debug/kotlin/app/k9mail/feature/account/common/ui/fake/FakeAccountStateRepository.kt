@@ -4,9 +4,9 @@ import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.AccountDisplayOptions
 import app.k9mail.feature.account.common.domain.entity.AccountState
 import app.k9mail.feature.account.common.domain.entity.AccountSyncOptions
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.common.domain.entity.MailConnectionSecurity
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
+import com.fsck.k9.entity.AuthorizationState
 import com.fsck.k9.mail.AuthType
 import com.fsck.k9.mail.ServerSettings
 

@@ -8,7 +8,7 @@ import app.k9mail.core.android.common.data.FireBaseParam.SIGN_IN_ERROR_CONTENT
 import app.k9mail.core.android.common.data.FireBaseScreenEvent.SIGN_IN_OUTLOOK
 import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract.UseCase
 import app.k9mail.feature.account.oauth.domain.OauthAccountType
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationIntentResult

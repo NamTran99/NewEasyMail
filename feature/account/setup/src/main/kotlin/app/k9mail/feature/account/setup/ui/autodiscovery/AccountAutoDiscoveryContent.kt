@@ -39,9 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.k9mail.core.ui.compose.common.activity.LocalActivity
 import app.k9mail.core.ui.compose.common.mvi.observe
+import app.k9mail.core.ui.compose.designsystem.PreviewWithTheme
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonFilled
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonText
 import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
@@ -55,15 +57,18 @@ import app.k9mail.core.ui.compose.designsystem.molecule.input.PasswordInput
 import app.k9mail.core.ui.compose.designsystem.organism.TopAppBarWithBackButton
 import app.k9mail.core.ui.compose.designsystem.template.ResponsiveWidthContainer
 import app.k9mail.core.ui.compose.theme2.MainTheme
+import app.k9mail.feature.account.common.domain.input.StringInputField
 import app.k9mail.feature.account.common.ui.loadingerror.rememberContentLoadingErrorViewState
 import app.k9mail.feature.account.oauth.data.microsoft.IMicrosoftSignIn
 import app.k9mail.feature.account.oauth.domain.entity.OAuthResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect
+import app.k9mail.feature.account.oauth.ui.fake.FakeAccountOAuthViewModel
 import app.k9mail.feature.account.oauth.ui.toResourceString
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
+import app.k9mail.feature.account.setup.ui.autodiscovery.fake.fakeAutoDiscoveryResultSettings
 import app.k9mail.feature.account.setup.ui.autodiscovery.view.ListMailLoginView
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -273,30 +278,34 @@ internal fun ContentView(
                 }
             }
 
-            EmailAddressInput(
-                emailAddress = state.emailAddress.value,
-                errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
-                onEmailAddressChange = { onEvent(Event.EmailAddressChanged(it)) },
-                contentPadding = PaddingValues(),
-            )
-            Spacer(modifier = Modifier.height(MainTheme.spacings.default))
-            PasswordInput(
-                password = state.password.value,
-                errorMessage = state.password.error?.toAutoDiscoveryValidationErrorString(resources),
-                onPasswordChange = { onEvent(Event.PasswordChanged(it)) },
-                contentPadding = PaddingValues(),
-            )
+            Column(modifier = Modifier.padding(horizontal = MainTheme.spacings.double)) {
+                EmailAddressInput(
+                    emailAddress = state.emailAddress.value,
+                    errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
+                    onEmailAddressChange = { onEvent(Event.EmailAddressChanged(it)) },
+                    contentPadding = PaddingValues(),
+                )
+                Spacer(modifier = Modifier.height(MainTheme.spacings.default))
+                PasswordInput(
+                    password = state.password.value,
+                    errorMessage = state.password.error?.toAutoDiscoveryValidationErrorString(resources),
+                    onPasswordChange = { onEvent(Event.PasswordChanged(it)) },
+                    contentPadding = PaddingValues(),
+                )
 
-            Spacer(modifier = Modifier.height(MainTheme.spacings.triple))
-            ButtonFilled(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                text = stringResource(id = R.string.account_setup_login),
-                onClick = {
-                    onEvent(Event.OnSignInPasswordClicked)
-                },
-            )
+                Spacer(modifier = Modifier.height(MainTheme.spacings.triple))
+                ButtonFilled(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    text = stringResource(id = R.string.account_setup_login),
+                    onClick = {
+                        onEvent(Event.OnSignInPasswordClicked)
+                    },
+                )
+            }
+
+
 
             Spacer(modifier = Modifier.height(MainTheme.spacings.double))
 
@@ -350,23 +359,23 @@ internal fun ContentView(
     }
 }
 
-//@Composable
-//@Preview(showBackground = true)
-//internal fun AccountAutoDiscoveryContentGmailPreview() {
-//    PreviewWithTheme {
-//        AccountAutoDiscoveryContent(
-//            state = State(
-//                configStep = AccountAutoDiscoveryContract.ConfigStep.LIST_MAIL_SERVER,
-//                emailAddress = StringInputField(value = "test@example.com"),
-//                isShowToolbar = true,
-//                autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = true),
-//            ),
-//            onEvent = {},
-//            oAuthViewModel = FakeAccountOAuthViewModel(),
-//            appName = "AppName",
-//        )
-//    }
-//}
+@Composable
+@Preview(showBackground = true)
+internal fun AccountAutoDiscoveryContentGmailPreview() {
+    PreviewWithTheme {
+        AccountAutoDiscoveryContent(
+            state = State(
+                configStep = AccountAutoDiscoveryContract.ConfigStep.YANDEX,
+                emailAddress = StringInputField(value = "test@example.com"),
+                isShowToolbar = true,
+                autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = true),
+            ),
+            onEvent = {},
+            oAuthViewModel = FakeAccountOAuthViewModel(),
+            appName = "AppName",
+        )
+    }
+}
 
 
 fun Context.loadPage(uriString: String?) {

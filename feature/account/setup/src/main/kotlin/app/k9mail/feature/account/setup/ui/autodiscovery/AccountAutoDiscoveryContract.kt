@@ -3,7 +3,7 @@ package app.k9mail.feature.account.setup.ui.autodiscovery
 import app.k9mail.autodiscovery.api.AutoDiscoveryResult
 import app.k9mail.core.common.domain.usecase.validation.ValidationResult
 import app.k9mail.core.ui.compose.common.mvi.UnidirectionalViewModel
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.common.domain.entity.IncomingProtocolType
 import app.k9mail.feature.account.common.domain.input.StringInputField
 import app.k9mail.feature.account.common.ui.loadingerror.LoadingErrorState

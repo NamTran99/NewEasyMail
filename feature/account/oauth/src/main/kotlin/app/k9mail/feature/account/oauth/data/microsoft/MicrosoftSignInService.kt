@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.annotation.RawRes
 import app.k9mail.feature.account.common.domain.AccountDomainContract
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
-import app.k9mail.feature.account.common.domain.entity.OauthMailType
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationResult
+import com.fsck.k9.entity.OauthMailType
 import com.google.gson.Gson
 import com.microsoft.identity.client.AcquireTokenParameters
 import com.microsoft.identity.client.AcquireTokenSilentParameters

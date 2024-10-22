@@ -1,5 +1,6 @@
 package com.fsck.k9
 
+import com.fsck.k9.entity.AuthorizationState
 import com.fsck.k9.backend.api.SyncConfig.ExpungePolicy
 import com.fsck.k9.mail.Address
 import com.fsck.k9.mail.ServerSettings
@@ -36,7 +37,7 @@ class Account(override val uuid: String) : BaseAccount {
 
     @get:Synchronized
     @set:Synchronized
-    var oAuthState: String? = null
+    var oAuthState: AuthorizationState? = null
 
     /**
      * Storage provider ID, used to locate and manage the underlying DB/file storage.

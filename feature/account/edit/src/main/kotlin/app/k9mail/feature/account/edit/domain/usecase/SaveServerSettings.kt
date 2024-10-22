@@ -1,7 +1,7 @@
 package app.k9mail.feature.account.edit.domain.usecase
 
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.AuthorizationState
+import com.fsck.k9.entity.AuthorizationState
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountServerSettingsUpdater
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterResult
 import app.k9mail.feature.account.edit.domain.AccountEditDomainContract.UseCase

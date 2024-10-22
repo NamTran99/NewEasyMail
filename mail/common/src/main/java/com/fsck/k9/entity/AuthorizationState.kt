@@ -1,4 +1,4 @@
-package app.k9mail.feature.account.common.domain.entity
+package com.fsck.k9.entity
 
 import com.google.gson.Gson
 

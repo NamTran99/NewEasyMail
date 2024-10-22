@@ -13,6 +13,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.fsck.k9.entity.AuthorizationState
+import com.fsck.k9.entity.OauthMailType
 import app.k9mail.feature.account.oauth.domain.AccountOAuthDomainContract.UseCase.GetOAuthRequestIntent
 import app.k9mail.feature.account.oauth.domain.entity.AuthorizationIntentResult
 import com.fsck.k9.Account
@@ -74,7 +76,7 @@ internal class AuthViewModel(
 
     private fun getOrCreateAuthState(account: Account): AuthState {
         return try {
-            account.oAuthState?.let { AuthState.jsonDeserialize(it) } ?: AuthState()
+            account.oAuthState?.value?.let { AuthState.jsonDeserialize(it) } ?: AuthState()
         } catch (e: Exception) {
             Timber.e(e, "Error deserializing AuthState")
             AuthState()
@@ -137,7 +139,7 @@ internal class AuthViewModel(
                 authState.update(tokenResponse, authorizationException)
 
                 val account = account!!
-                account.oAuthState = authState.jsonSerializeString()
+                account.oAuthState = AuthorizationState(authState.jsonSerializeString(), type = OauthMailType.Other)
 
                 viewModelScope.launch(Dispatchers.IO) {
                     accountManager.saveAccount(account)

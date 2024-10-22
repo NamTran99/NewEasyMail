@@ -2,6 +2,8 @@ plugins {
     id(ThunderbirdPlugins.App.androidCompose)
     alias(libs.plugins.dependency.guard)
     id("thunderbird.quality.badging")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 val testCoverageEnabled: Boolean by extra

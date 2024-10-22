@@ -1,5 +1,6 @@
 package com.fsck.k9
 
+import com.fsck.k9.entity.AuthorizationState
 import com.fsck.k9.Account.Companion.DEFAULT_SORT_ASCENDING
 import com.fsck.k9.Account.Companion.DEFAULT_SORT_TYPE
 import com.fsck.k9.Account.Companion.DEFAULT_SYNC_INTERVAL
@@ -17,6 +18,7 @@ import com.fsck.k9.helper.Utility
 import com.fsck.k9.mailstore.StorageManager
 import com.fsck.k9.preferences.Storage
 import com.fsck.k9.preferences.StorageEditor
+import com.google.gson.Gson
 import timber.log.Timber
 
 class AccountPreferenceSerializer(
@@ -35,7 +37,7 @@ class AccountPreferenceSerializer(
             outgoingServerSettings = serverSettingsSerializer.deserialize(
                 storage.getString("$accountUuid.$OUTGOING_SERVER_SETTINGS_KEY", ""),
             )
-            oAuthState = storage.getString("$accountUuid.oAuthState", null)
+            oAuthState = Gson().fromJson(storage.getString("$accountUuid.oAuthState", null), AuthorizationState::class.java)
             localStorageProviderId = storage.getString(
                 "$accountUuid.localStorageProvider",
                 storageManager.defaultProviderId,
@@ -269,7 +271,7 @@ class AccountPreferenceSerializer(
                 "$accountUuid.$OUTGOING_SERVER_SETTINGS_KEY",
                 serverSettingsSerializer.serialize(outgoingServerSettings),
             )
-            editor.putString("$accountUuid.oAuthState", oAuthState)
+            editor.putString("$accountUuid.oAuthState", Gson().toJson(oAuthState))
             editor.putString("$accountUuid.localStorageProvider", localStorageProviderId)
             editor.putString("$accountUuid.description", name)
             editor.putString("$accountUuid.alwaysBcc", alwaysBcc)
