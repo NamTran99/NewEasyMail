@@ -115,7 +115,7 @@ android {
             keyAlias = "androidkey"
             keyPassword = "android"
             storePassword = "android"
-            storeFile = file("keyeasymai_release.jks")
+            storeFile = file("essy_mail_release.jks")
         }
     }
 
