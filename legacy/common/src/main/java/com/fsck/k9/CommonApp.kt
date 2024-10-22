@@ -1,8 +1,10 @@
 package com.fsck.k9
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.feature.widget.message.list.MessageListWidgetManager
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.job.WorkManagerConfigurationProvider
@@ -10,6 +12,7 @@ import com.fsck.k9.notification.NotificationChannelManager
 import com.fsck.k9.ui.base.AppLanguageManager
 import com.fsck.k9.ui.base.ThemeManager
 import com.fsck.k9.ui.base.extensions.currentLocale
+import com.google.firebase.FirebaseApp
 import io.paperdb.Paper
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +27,10 @@ import timber.log.Timber
 import androidx.work.Configuration as WorkManagerConfiguration
 
 abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
+    companion object{
+        lateinit var appContext: Context
+    }
+
     private val messagingController: MessagingController by inject()
     private val messagingListenerProvider: MessagingListenerProvider by inject()
     private val themeManager: ThemeManager by inject()
@@ -37,11 +44,11 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
 
     override fun onCreate() {
         Core.earlyInit()
-
+        appContext = applicationContext
         super.onCreate()
 
         DI.start(this, listOf(provideAppModule()) + coreModules + uiModules + commonAppModules)
-
+        FirebaseUtil.init(this)
         K9.init(this)
         Core.init(this)
         initializeAppLanguage()

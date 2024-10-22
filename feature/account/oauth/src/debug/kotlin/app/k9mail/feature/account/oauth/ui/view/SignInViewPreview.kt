@@ -10,7 +10,6 @@ internal fun SignInViewPreview() {
     PreviewWithTheme {
         SignInView(
             onSignInClick = {},
-            isGoogleSignIn = false,
         )
     }
 }
@@ -21,7 +20,6 @@ internal fun SignInViewWithGooglePreview() {
     PreviewWithTheme {
         SignInView(
             onSignInClick = {},
-            isGoogleSignIn = true,
         )
     }
 }

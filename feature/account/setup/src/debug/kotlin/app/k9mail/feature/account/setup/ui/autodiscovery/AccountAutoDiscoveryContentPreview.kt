@@ -41,7 +41,7 @@ internal fun AccountAutoDiscoveryContentPasswordPreview() {
     PreviewWithTheme {
         AccountAutoDiscoveryContent(
             state = AccountAutoDiscoveryContract.State(
-                configStep = AccountAutoDiscoveryContract.ConfigStep.PASSWORD,
+                configStep = AccountAutoDiscoveryContract.ConfigStep.OAUTH,
                 emailAddress = StringInputField(value = "test@example.com"),
                 autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = true),
             ),
@@ -58,7 +58,7 @@ internal fun AccountAutoDiscoveryContentPasswordUntrustedSettingsPreview() {
     PreviewWithTheme {
         AccountAutoDiscoveryContent(
             state = AccountAutoDiscoveryContract.State(
-                configStep = AccountAutoDiscoveryContract.ConfigStep.PASSWORD,
+                configStep = AccountAutoDiscoveryContract.ConfigStep.OAUTH,
                 emailAddress = StringInputField(value = "test@example.com"),
                 autoDiscoverySettings = fakeAutoDiscoveryResultSettings(isTrusted = false),
             ),
@@ -75,7 +75,7 @@ internal fun AccountAutoDiscoveryContentPasswordNoSettingsPreview() {
     PreviewWithTheme {
         AccountAutoDiscoveryContent(
             state = AccountAutoDiscoveryContract.State(
-                configStep = AccountAutoDiscoveryContract.ConfigStep.PASSWORD,
+                configStep = AccountAutoDiscoveryContract.ConfigStep.OAUTH,
                 emailAddress = StringInputField(value = "test@example.com"),
             ),
             onEvent = {},
