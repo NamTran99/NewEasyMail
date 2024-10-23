@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import app.k9mail.core.android.common.data.FirebaseUtil
+import app.k9mail.feature.account.oauth.data.microsoft.IMicrosoftSignIn
 import app.k9mail.feature.widget.message.list.MessageListWidgetManager
 import com.fsck.k9.controller.MessagingController
 import com.fsck.k9.job.WorkManagerConfigurationProvider
@@ -37,6 +38,7 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
     private val appLanguageManager: AppLanguageManager by inject()
     private val notificationChannelManager: NotificationChannelManager by inject()
     private val messageListWidgetManager: MessageListWidgetManager by inject()
+    private val microsoftSignInService: IMicrosoftSignIn by inject()
     private val workManagerConfigurationProvider: WorkManagerConfigurationProvider by inject()
 
     private val appCoroutineScope: CoroutineScope = MainScope()
@@ -46,7 +48,6 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
         Core.earlyInit()
         appContext = applicationContext
         super.onCreate()
-
         DI.start(this, listOf(provideAppModule()) + coreModules + uiModules + commonAppModules)
         FirebaseUtil.init(this)
         K9.init(this)
@@ -55,6 +56,7 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
         Paper.init(this)
         updateNotificationChannelsOnAppLanguageChanges()
         themeManager.init()
+        microsoftSignInService.init(this)
         messageListWidgetManager.init()
 
         messagingListenerProvider.listeners.forEach { listener ->

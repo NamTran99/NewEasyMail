@@ -1,8 +1,5 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery.view
 
-import android.content.pm.PackageManager
-import android.util.Base64
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
