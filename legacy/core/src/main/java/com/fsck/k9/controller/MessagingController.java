@@ -2184,7 +2184,7 @@ public class MessagingController {
     public boolean performPeriodicMailSync(Account account, Boolean isForeGrounded) {
         final CountDownLatch latch = new CountDownLatch(1);
         MutableBoolean syncError = new MutableBoolean(false);
-        checkMail(account, false, false, true, false, new SimpleMessagingListener() {
+        checkMail(account, false, false, !isForeGrounded, false, new SimpleMessagingListener() {
             @Override
             public void checkMailFinished(Context context, Account account) {
                 latch.countDown();
