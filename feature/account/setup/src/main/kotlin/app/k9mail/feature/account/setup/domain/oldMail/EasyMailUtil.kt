@@ -21,7 +21,7 @@ object EasyMailUtil {
 //            return Paper.book().read<a>("CURRENT_ACCOUNT", null)
         val fakeAcc = a(
             "trandinhnam1199@yandex.com",
-            3,
+            7,
             "sbfksbfprvricpvk",
             "This is signature",
         )

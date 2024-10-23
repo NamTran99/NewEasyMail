@@ -1,7 +1,7 @@
 package com.hungbang.email2018.f.c;
 
 public enum OldMailAccountType {
-    GOOGLE(1), OUTLOOK(2), YANDEX(3);
+    GOOGLE(1), OUTLOOK(2), YANDEX(3), YAHOO(4), AOL(5), MAIL_COM(6), OTHER(7);
 
     private final int value;
 

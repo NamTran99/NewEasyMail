@@ -18,6 +18,8 @@ public class a {
     public a(@NonNull String accMail, int accType, @NonNull String password, @NonNull String signature) {
         a = accMail;
         b = accType;
+        h = password;
+        i = signature;
     }
 
 

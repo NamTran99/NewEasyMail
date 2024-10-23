@@ -148,7 +148,7 @@ internal class AccountAutoDiscoveryViewModel(
         return when (this) {
             OldMailAccountType.GOOGLE -> GMAIL
             OldMailAccountType.OUTLOOK -> ConfigStep.OUTLOOK
-            OldMailAccountType.YANDEX -> ConfigStep.YANDEX
+            else -> ConfigStep.OTHER
         }
     }
 
