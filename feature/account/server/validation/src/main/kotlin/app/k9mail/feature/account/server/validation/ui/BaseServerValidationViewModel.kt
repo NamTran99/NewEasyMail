@@ -1,5 +1,6 @@
 package app.k9mail.feature.account.server.validation.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
 import app.k9mail.feature.account.common.domain.AccountDomainContract
@@ -100,6 +101,7 @@ abstract class BaseServerValidationViewModel(
     }
 
     private fun onOAuthResult(result: OAuthResult) {
+        Log.d("TAG", "onOAuthResult: NamTD8 here")
         if (result is OAuthResult.Success) {
             accountStateRepository.setAuthorizationState(result.authorizationState)
             updateState {

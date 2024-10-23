@@ -12,6 +12,7 @@ dependencies {
     api(projects.core.ui.compose.theme2.k9mail)
     api(projects.core.ui.compose.theme2.thunderbird)
     api(projects.core.android.common)
+    api(libs.lottieJson.compose)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)

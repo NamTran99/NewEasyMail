@@ -105,6 +105,7 @@ junitJunit = "4.12"
 firebaseBom = "33.4.0"
 msal = "5.6.0"
 gson = "2.11.0"
+verLottie = "6.4.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -256,6 +257,7 @@ firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 msal = { module = "com.microsoft.identity.client:msal", version.ref = "msal" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+lottieJson-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "verLottie" }
 
 
 [bundles]

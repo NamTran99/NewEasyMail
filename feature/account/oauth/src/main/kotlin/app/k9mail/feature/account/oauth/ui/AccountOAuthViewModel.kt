@@ -2,6 +2,7 @@ package app.k9mail.feature.account.oauth.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import app.k9mail.core.android.common.data.FireBaseParam.SIGN_IN_ERROR
 import app.k9mail.core.android.common.data.FireBaseParam.SIGN_IN_ERROR_CONTENT
@@ -43,6 +44,7 @@ class AccountOAuthViewModel(
             is Event.OnOAuthResult -> onOAuthResult(event.resultCode, event.data)
 
             is Event.OnOAuthMicrosoftResult -> {
+                Log.d("TAG", "event: namTD8 ${event.result}")
                 handleSignInResult(event.result)
             }
 
@@ -139,6 +141,7 @@ class AccountOAuthViewModel(
     private fun navigateBack() = emitEffect(Effect.NavigateBack)
 
     private fun navigateNext(authorizationState: AuthorizationState) {
+        Log.d("TAG", "navigateNext: NamTD8")
         emitEffect(Effect.NavigateNext(authorizationState))
     }
 }

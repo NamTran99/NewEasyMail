@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,6 +14,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -44,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import app.k9mail.core.ui.compose.common.activity.LocalActivity
 import app.k9mail.core.ui.compose.common.mvi.observe
 import app.k9mail.core.ui.compose.designsystem.PreviewWithTheme
+import app.k9mail.core.ui.compose.designsystem.atom.LottieAnimationApp
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonFilled
 import app.k9mail.core.ui.compose.designsystem.atom.button.ButtonText
 import app.k9mail.core.ui.compose.designsystem.atom.text.TextBodyLarge
@@ -70,6 +74,7 @@ import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryCon
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import app.k9mail.feature.account.setup.ui.autodiscovery.fake.fakeAutoDiscoveryResultSettings
 import app.k9mail.feature.account.setup.ui.autodiscovery.view.ListMailLoginView
+import kotlin.math.log
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -138,12 +143,18 @@ internal fun AutoDiscoveryContent(
     }
     val activity = LocalActivity.current
     val microsoftSignIn: IMicrosoftSignIn = koinInject()
-
     oAuthViewModel.observe { effect ->
         when (effect) {
-            is Effect.NavigateNext -> onEvent(Event.OnOAuthResult(OAuthResult.Success(effect.state)))
+            is Effect.NavigateNext -> {
+                Log.d("TAG", "AutoDiscoveryContent: NamTD8")
+                onEvent(Event.OnOAuthResult(OAuthResult.Success(effect.state)))
+            }
             is Effect.NavigateBack -> onEvent(Event.OnOAuthResult(OAuthResult.Failure))
             is Effect.LaunchOAuth -> oAuthLauncher.launch(effect.intent)
+            is Effect.ShowError -> {
+                Toast.makeText(context, effect.message.toResourceString(context.resources), Toast.LENGTH_SHORT).show()
+            }
+
             Effect.LaunchOAuthMicrosoft -> {
                 isShowLoadingOauth = true
                 scope.launch {
@@ -157,39 +168,46 @@ internal fun AutoDiscoveryContent(
                     isShowLoadingOauth = false
                 }
             }
-            is Effect.ShowError -> {
-                Toast.makeText(context, effect.message.toResourceString(context.resources), Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
-    ContentLoadingErrorView(
-        state = rememberContentLoadingErrorViewState(state),
-        loading = {
-            LoadingView(
-                message = stringResource(id = R.string.account_setup_auto_discovery_loading_message),
-                modifier = Modifier.fillMaxSize(),
+    Box(
+        contentAlignment = if (isShowLoadingOauth) Alignment.Center else Alignment.TopCenter,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        if (isShowLoadingOauth) {
+            LottieAnimationApp(animRes = R.raw.account_setup_anim_loading_oauth, modifier = Modifier.size(100.dp))
+        } else {
+            ContentLoadingErrorView(
+                state = rememberContentLoadingErrorViewState(state),
+                loading = {
+                    LoadingView(
+                        message = stringResource(id = R.string.account_setup_auto_discovery_loading_message),
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                },
+                error = {
+                    ErrorView(
+                        title = stringResource(id = R.string.account_setup_auto_discovery_loading_error),
+                        message = state.error?.toAutoDiscoveryErrorString(resources),
+                        onRetry = { onEvent(Event.OnRetryClicked) },
+                        onBack = { onEvent(Event.OnBackClicked) },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                },
+                content = {
+                    ContentView(
+                        state = state,
+                        onEvent = onEvent,
+                        resources = resources,
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(modifier),
             )
-        },
-        error = {
-            ErrorView(
-                title = stringResource(id = R.string.account_setup_auto_discovery_loading_error),
-                message = state.error?.toAutoDiscoveryErrorString(resources),
-                onRetry = { onEvent(Event.OnRetryClicked) },
-                modifier = Modifier.fillMaxSize(),
-            )
-        },
-        content = {
-            ContentView(
-                state = state,
-                onEvent = onEvent,
-                resources = resources,
-            )
-        },
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier),
-    )
+        }
+    }
 }
 
 @Composable
@@ -304,8 +322,6 @@ internal fun ContentView(
                     },
                 )
             }
-
-
 
             Spacer(modifier = Modifier.height(MainTheme.spacings.double))
 
