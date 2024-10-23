@@ -2,6 +2,8 @@ package com.fsck.k9.notification
 
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.WearableExtender
+import app.k9mail.core.android.common.data.FireBaseScreenEvent.NOTIFY_NEW_MAIL_RECEIVE
+import app.k9mail.core.android.common.data.FirebaseUtil
 import com.fsck.k9.notification.NotificationChannelManager.ChannelType
 import timber.log.Timber
 import androidx.core.app.NotificationCompat.Builder as NotificationBuilder
@@ -21,6 +23,7 @@ internal class SingleMessageNotificationCreator(
         val notificationId = singleNotificationData.notificationId
         val content = singleNotificationData.content
 
+        FirebaseUtil.logEvent(NOTIFY_NEW_MAIL_RECEIVE)
         val notification = notificationHelper.createNotificationBuilder(account, ChannelType.MESSAGES)
             .setCategory(NotificationCompat.CATEGORY_EMAIL)
             .setGroup(baseNotificationData.groupKey)

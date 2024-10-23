@@ -9,6 +9,7 @@ import app.k9mail.autodiscovery.demo.DemoServerSettings
 import app.k9mail.core.common.mail.toUserEmailAddress
 import app.k9mail.core.common.oauth.OAuthConfigurationProvider
 import app.k9mail.feature.account.setup.domain.DomainContract
+import app.k9mail.feature.account.setup.domain.oldMail.EasyMailUtil
 
 internal class GetAutoDiscovery(
     private val service: AutoDiscoveryService,
@@ -26,7 +27,7 @@ internal class GetAutoDiscovery(
                 validateOAuthSupport(result)
             }
         } else {
-            result
+            EasyMailUtil.getDiscoverySettingsFromFirebaseConfig(emailAddress) ?: result
         }
     }
 

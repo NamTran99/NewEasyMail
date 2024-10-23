@@ -6,6 +6,8 @@ import static com.fsck.k9.controller.Preconditions.requireNotNull;
 import static com.fsck.k9.helper.ExceptionHelper.getRootCauseMessage;
 import static com.fsck.k9.mail.Flag.X_REMOTE_COPY_STARTED;
 
+import static app.k9mail.core.android.common.data.FireBaseScreenEvent.ERROR_REFRESH_ACCOUNT;
+
 import android.content.Context;
 import android.os.Process;
 import android.os.SystemClock;
@@ -90,6 +92,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import app.k9mail.core.android.common.data.FireBaseScreenEvent;
+import app.k9mail.core.android.common.data.FirebaseUtil;
 import timber.log.Timber;
 
 
@@ -663,11 +667,12 @@ public class MessagingController {
     }
 
     public void handleAuthenticationFailure(Account account, boolean incoming) {
+        FirebaseUtil.INSTANCE.logEvent(ERROR_REFRESH_ACCOUNT, null);
         if (account.shouldMigrateToOAuth()) {
             migrateAccountToOAuth(account);
         }
 
-        notificationController.showAuthenticationErrorNotification(account, incoming);
+//        notificationController.showAuthenticationErrorNotification(account, incoming);
     }
 
     private void migrateAccountToOAuth(Account account) {
@@ -1465,6 +1470,7 @@ public class MessagingController {
      */
     @VisibleForTesting
     protected void sendPendingMessagesSynchronous(final Account account) {
+        FirebaseUtil.INSTANCE.logEvent(FireBaseScreenEvent.SEND_MAIL, null);
         Exception lastFailure = null;
         try {
             if (isAuthenticationProblem(account, false)) {
@@ -1598,6 +1604,9 @@ public class MessagingController {
         } finally {
             if (lastFailure == null) {
                 notificationController.clearSendFailedNotification(account);
+                FirebaseUtil.INSTANCE.logEvent(FireBaseScreenEvent.SEND_MAIL_SUCCESS, null);
+            }else {
+                FirebaseUtil.INSTANCE.logEvent(FireBaseScreenEvent.SEND_MAIL_FAILED, null);
             }
         }
     }

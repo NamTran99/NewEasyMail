@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import app.k9mail.core.android.common.data.FireBaseScreenEvent
+import app.k9mail.core.android.common.data.FirebaseUtil
 import com.fsck.k9.controller.MessageReference
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.base.extensions.withArguments
@@ -55,7 +57,7 @@ class MessageViewContainerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseUtil.logEvent(FireBaseScreenEvent.VIEW_MESSAGE_DETAIL)
         setHasOptionsMenu(true)
 
         messageReference = if (savedInstanceState == null) {

@@ -73,22 +73,15 @@ object FireBaseScreenEvent {
     const val SHOW_DIALOG_REQUIRE_RE_LOGIN = "show_dialog_re_login"
     const val SAVED_CONFIG_NULL = "saved_config_null"
     const val SAVED_CONFIG_FOUND = "saved_config_found"
-    const val WELCOME_SCREEN = "welcome_screen"
-    const val WELCOME_SCREEN_SKIP = "welcome_screen_skip"
-    const val WELCOME_SCREEN_TRY_AI = "welcome_screen_try_ai"
 
-    const val AI_INTRO = "ai_intro"
-    const val AI_INTRO_GENERATE = "ai_intro_screen_generate"
-    const val AI_INTRO_SKIP = "ai_intro_screen_skip"
-
-    const val SIGN_IN = "signin_click_"
+    const val SIGN_IN = "sign_in_click"
     const val SIGN_IN_OUTLOOK = "sign_in_outlook_error"
     const val SIGN_IN_SUCCESS = "sign_in_success"
 
     const val FIND_SERVER_ERROR = "find_server_error"
-    const val SERVER_VALIDATION = "server_validation"
 
     const val ERROR_REFRESH_ACCOUNT = "error_refresh_account"
+    const val NOTIFY_NEW_MAIL_RECEIVE = "notify_new_mail_receive"
 }
 
 object FireBaseParam{
@@ -97,6 +90,4 @@ object FireBaseParam{
     const val SIGN_IN_RE_LOGIN = "is_re_login_old_mail"
     const val SIGN_IN_ERROR_CONTENT = "error_content"
     const val SIGN_IN_EMAIL = "email_server_not_found"
-    const val IS_INCOMING_VALIDATION = "IS_INCOMING_VALIDATION"
-    const val ERROR_CONTENT = "ERROR_CONTENT"
 }
