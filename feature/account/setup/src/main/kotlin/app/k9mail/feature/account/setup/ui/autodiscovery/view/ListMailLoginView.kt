@@ -1,5 +1,8 @@
 package app.k9mail.feature.account.setup.ui.autodiscovery.view
 
+import android.content.pm.PackageManager
+import android.util.Base64
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +29,8 @@ import app.k9mail.core.ui.compose.designsystem.atom.text.TextTitleLarge
 import app.k9mail.core.ui.compose.theme2.MainTheme
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ConfigStep
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 @Composable
 internal fun ListMailLoginView(
@@ -32,6 +38,26 @@ internal fun ListMailLoginView(
     onItemClick: (ConfigStep) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    try {
+        val info = context.packageManager.getPackageInfo(
+            context.packageName,
+            PackageManager.GET_SIGNING_CERTIFICATES,
+        )
+        for (signature in info.signingInfo.apkContentsSigners) {
+            val md = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            Log.d(
+                "NamTD8 KeyHash",
+                "KeyHash:" + Base64.encodeToString(
+                    md.digest(), 0,
+                ),
+            )
+        }
+    } catch (e: PackageManager.NameNotFoundException) {
+    } catch (e: NoSuchAlgorithmException) {
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()

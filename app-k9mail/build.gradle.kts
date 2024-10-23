@@ -121,6 +121,18 @@ android {
         }
     }
 
+    flavorDimensions += "signedKey"
+    productFlavors {
+
+        create("googleSignKey") {
+            dimension = "signedKey"
+        }
+        create("localKey") {
+            isDefault = true
+            dimension = "signedKey"
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release")

@@ -5,6 +5,15 @@ plugins {
 android {
     namespace = "app.k9mail.feature.account.oauth"
     resourcePrefix = "account_oauth_"
+
+    productFlavors {
+        getByName("googleSignKey") {
+            manifestPlaceholders["SHA_1_BASE_64"] = "bUjlmtXgQPWIGwT/ThVlVpUjzx4="
+        }
+        getByName("localKey") {
+            manifestPlaceholders["SHA_1_BASE_64"] = "KmAHRBTcv3IcOhQzOWEB7uOl2w4="
+        }
+    }
 }
 
 dependencies {

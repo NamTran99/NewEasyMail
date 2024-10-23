@@ -23,7 +23,7 @@
                 <data
                     android:scheme="msauth"
                     android:host="${applicationId}"
-                    android:path="/+gWbvv6P8JNcgqpnrqIF6pRUw/k=" />
+                    android:path="/{SHA_1_BASE_64}" />
             </intent-filter>
         </activity>
 

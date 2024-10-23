@@ -19,6 +19,16 @@ android {
         jvmTarget = ThunderbirdProjectConfig.javaCompatibilityVersion.toString()
     }
 
+    flavorDimensions += "signedKey"
+    productFlavors {
+        create("googleSignKey") {
+            dimension = "signedKey"
+        }
+        create("localKey") {
+            dimension = "signedKey"
+        }
+    }
+
     lint {
         lintConfig = file("${rootProject.projectDir}/config/lint/lint.xml")
     }
