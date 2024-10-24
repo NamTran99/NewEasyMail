@@ -25,8 +25,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
@@ -252,11 +250,11 @@
             android:exported="false"
             />
 
-        <service
-            android:name="com.fsck.k9.controller.push.PushService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync"
-            />
+<!--        <service-->
+<!--            android:name="com.fsck.k9.controller.push.PushService"-->
+<!--            android:exported="false"-->
+<!--            android:foregroundServiceType="dataSync"-->
+<!--            />-->
 
         <provider
             android:name="com.fsck.k9.provider.AttachmentProvider"

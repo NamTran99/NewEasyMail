@@ -244,7 +244,7 @@ class PushController internal constructor(
     }
 
     private fun startServices() {
-        pushServiceManager.start()
+//        pushServiceManager.start()
         bootCompleteManager.enableReceiver()
         registerAutoSyncListener()
         registerConnectivityChangeListener()
@@ -253,7 +253,7 @@ class PushController internal constructor(
     }
 
     private fun stopServices() {
-        pushServiceManager.stop()
+//        pushServiceManager.stop()
         bootCompleteManager.disableReceiver()
         autoSyncManager.unregisterListener()
         unregisterConnectivityChangeListener()
