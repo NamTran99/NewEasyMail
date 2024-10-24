@@ -118,13 +118,11 @@ class RealOAuth2TokenProvider(
             ?: throw AuthenticationFailedException("Login required")
         val oldAccessToken: String = authState.accessToken
         var token = oldAccessToken
-        Log.d("TAG", "getMicrosoftToken: NamTD88 - token hết hạn: ${authState.expiresOn} - ${requestFreshToken}")
         if (requestFreshToken) {
             val job = scope.launch {
                 microsoftService.refreshToken(authState.accountId)?.let { result ->
                     token = result.accessToken
                     if(oldAccessToken != result.accessToken){
-                        Log.d("TAG", "getMicrosoftToken: NamTD8 - reset token success")
                         authStateStorage.updateAuthorizationState(authorizationState =  AuthorizationState(
                             value = Gson().toJson(result.convertToMicrosoftAuthResult()),
                             type = OauthMailType.Microsoft,

@@ -12,20 +12,21 @@ import app.k9mail.core.common.net.Port
 import com.fsck.k9.helper.EmailHelper
 import com.hungbang.email2018.f.c.SignInConfigs
 import com.hungbang.email2018.f.c.a
+import io.paperdb.Paper
 
 object EasyMailUtil {
     /**
      * used to get account email & password
      */
     fun getSavedAccountFromEasyMail(): a? {
-//            return Paper.book().read<a>("CURRENT_ACCOUNT", null)
-        val fakeAcc = a(
-            "trandinhnam1199@yandex.com",
-            7,
-            "sbfksbfprvricpvk",
-            "This is signature",
-        )
-        return fakeAcc
+            return Paper.book().read<a>("CURRENT_ACCOUNT", null)
+//        val fakeAcc = a(
+//            "trandinhnam1199@yandex.com",
+//            7,
+//            "sbfksbfprvricpvk",
+//            "This is signature",
+//        )
+//        return fakeAcc
     }
 
     /**

@@ -1,7 +1,7 @@
 {
   "client_id" : "394184db-9ac2-4648-822e-1bb6474432ec",
   "authorization_user_agent" : "WEBVIEW",
-  "redirect_uri" : "msauth://com.mail.emailapp.easymail2018/%2BgWbvv6P8JNcgqpnrqIF6pRUw%2Fk%3D",
+  "redirect_uri" : "msauth://com.mail.emailapp.easymail2018/bUjlmtXgQPWIGwT%2FThVlVpUjzx4%3D",
   "authorities" : [
     {
       "type": "AAD",

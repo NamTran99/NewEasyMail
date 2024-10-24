@@ -49,63 +49,13 @@ android {
 //        applicationId = "com.hungbang.email2018"
         testApplicationId = "email.swift.ai.smart.allmail"
 
-        versionCode = 226
-        versionName = "226"
+        versionCode = 228
+        versionName = "228"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(
             listOf(
-                "ar",
-                "be",
-                "bg",
-                "br",
-                "ca",
-                "co",
-                "cs",
-                "cy",
-                "da",
-                "de",
-                "el",
                 "en",
-                "en_GB",
-                "eo",
-                "es",
-                "et",
-                "eu",
-                "fa",
-                "fi",
-                "fr",
-                "fy",
-                "gd",
-                "gl",
-                "hr",
-                "hu",
-                "in",
-                "is",
-                "it",
-                "iw",
-                "ja",
-                "ko",
-                "lt",
-                "lv",
-                "ml",
-                "nb",
-                "nl",
-                "pl",
-                "pt_BR",
-                "pt_PT",
-                "ro",
-                "ru",
-                "sk",
-                "sl",
-                "sq",
-                "sr",
-                "sv",
-                "tr",
-                "uk",
-                "vi",
-                "zh_CN",
-                "zh_TW",
             ),
         )
 
