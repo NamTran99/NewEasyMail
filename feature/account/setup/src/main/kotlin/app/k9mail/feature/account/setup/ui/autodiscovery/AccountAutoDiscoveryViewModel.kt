@@ -75,8 +75,8 @@ internal class AccountAutoDiscoveryViewModel(
             }
 
             Event.OnScreenShown -> {
-//                if (!K9.isCheckReLogin) {
-                if(true){
+                if (!K9.isCheckReLogin) {
+//                if(isCheckReLogin){
                     viewModelScope.launch(Dispatchers.Main) {
                         checkIfHaveDataOldAccount()
                         K9.isCheckReLogin = true
@@ -123,7 +123,7 @@ internal class AccountAutoDiscoveryViewModel(
         }
         setUpMailServerConfig(step)
 
-        if (step  ==  ConfigStep.OUTLOOK) {
+        if (step  == ConfigStep.OUTLOOK) {
             oAuthViewModel.event(AccountOAuthContract.Event.OnOAuthMicrosoftClick)
         }
 

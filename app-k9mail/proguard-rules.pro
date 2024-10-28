@@ -63,7 +63,7 @@
 -keep,allowshrinking class com.tokenautocomplete.TokenCompleteTextView
 #-keepclassmembers class com.hungbang.email2018.f.c.a
 -keep class com.hungbang.email2018.f.c.a { *; }
-#-applymapping oldmapping6.txt
+-keep class com.hungbang.email2018.f.c.* { *; }
 
 -dontwarn com.google.crypto.tink.subtle.Ed25519Sign$KeyPair
 -dontwarn com.google.crypto.tink.subtle.Ed25519Sign

@@ -31,7 +31,7 @@ object FirebaseUtil {
                     db.collection("SignInConfig").document(domain)
                         .get()
                         .addOnSuccessListener { document ->
-                            Log.d("hungnd", "getSignInConfigFromFirebase: $document")
+                            Log.d(TAG, "getSignInConfigFromFirebase: $document")
                             continuation.resume(document.toObject(SignInConfigs::class.java))
                         }
                         .addOnFailureListener { exception ->

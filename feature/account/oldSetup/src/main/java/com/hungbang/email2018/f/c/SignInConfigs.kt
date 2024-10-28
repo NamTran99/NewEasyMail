@@ -13,5 +13,8 @@ data class SignInConfigs (
     val smtp_port: String ,
     val smtp_start_tls: String ,
 ){
+    constructor() : this("", "", "", "", "", "", "", ) {
+
+    }
     fun isSmtpStartTLS()  = smtp_start_tls == "1"
 }
