@@ -38,26 +38,6 @@ internal fun ListMailLoginView(
     onItemClick: (ConfigStep) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    try {
-        val info = context.packageManager.getPackageInfo(
-            context.packageName,
-            PackageManager.GET_SIGNING_CERTIFICATES,
-        )
-        for (signature in info.signingInfo.apkContentsSigners) {
-            val md = MessageDigest.getInstance("SHA")
-            md.update(signature.toByteArray())
-            Log.d(
-                "NamTD8 KeyHash",
-                "KeyHash:" + Base64.encodeToString(
-                    md.digest(), 0,
-                ),
-            )
-        }
-    } catch (e: PackageManager.NameNotFoundException) {
-    } catch (e: NoSuchAlgorithmException) {
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
