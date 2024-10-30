@@ -39,7 +39,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="?attr/colorOnSurface"
             android:visibility="gone"
             tools:text="demo@domain.example"
             tools:visibility="visible"
