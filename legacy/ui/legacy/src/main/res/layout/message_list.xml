@@ -31,7 +31,7 @@
             android:layout_marginTop="-6dp"
             android:elevation="8dp"
             android:max="10000"
-            android:visibility="invisible"
+            android:visibility="gone"
             />
 
         <com.fsck.k9.view.ViewSwitcher

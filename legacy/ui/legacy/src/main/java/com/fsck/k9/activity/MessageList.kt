@@ -955,7 +955,8 @@ open class MessageList :
     }
 
     override fun setMessageListProgressEnabled(enable: Boolean) {
-        progressBar!!.visibility = if (enable) View.VISIBLE else View.INVISIBLE
+        //hungnd: never show this progress bar
+//        progressBar!!.visibility = if (enable) View.VISIBLE else View.INVISIBLE
     }
 
     override fun setMessageListProgress(level: Int) {
