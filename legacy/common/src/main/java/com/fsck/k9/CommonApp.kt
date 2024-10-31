@@ -17,11 +17,13 @@ import com.google.firebase.FirebaseApp
 import io.paperdb.Paper
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.module.Module
 import timber.log.Timber
@@ -48,8 +50,13 @@ abstract class CommonApp : Application(), WorkManagerConfiguration.Provider {
         Core.earlyInit()
         appContext = applicationContext
         super.onCreate()
+        CoroutineScope(Dispatchers.IO).launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(this@CommonApp) {}
+        }
         DI.start(this, listOf(provideAppModule()) + coreModules + uiModules + commonAppModules)
         FirebaseUtil.init(this)
+        DataStoreHelper.init(this)
         K9.init(this)
         Core.init(this)
         initializeAppLanguage()

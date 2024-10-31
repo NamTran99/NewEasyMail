@@ -1142,4 +1142,6 @@ You can keep this message and use it as a backup for your secret key. If you wan
     <string name="from_2">From:</string>
     <string name="to_2">To:</string>
     <string name="subject">Subject:</string>
+
+    <string name="remove_ads">Remove Ads</string>
 </resources>

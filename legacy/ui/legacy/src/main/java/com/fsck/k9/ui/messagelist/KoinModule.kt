@@ -5,6 +5,7 @@ import org.koin.dsl.module
 
 val messageListUiModule = module {
     viewModel { MessageListViewModel(get()) }
+    viewModel { MessageListActivityViewModel() }
     factory { DefaultFolderProvider() }
     factory {
         MessageListLoader(

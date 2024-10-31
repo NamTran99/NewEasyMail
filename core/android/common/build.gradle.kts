@@ -15,6 +15,10 @@ dependencies {
     api(libs.firebase.crashlytics)
     api(libs.firebase.crashlytics.ktx)
     api(projects.feature.account.oldSetup)
+    api(libs.play.services.ads)
+    api(libs.billing)
+    api(libs.androidx.datastore.core.android)
+
     testImplementation(projects.core.testing)
     testImplementation(libs.robolectric)
 }

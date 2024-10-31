@@ -49,8 +49,8 @@ android {
 //        applicationId = "com.hungbang.email2018"
         testApplicationId = "email.swift.ai.smart.allmail"
 
-        versionCode = 231
-        versionName = "231"
+        versionCode = 234
+        versionName = "Oct302024"
 
         // Keep in sync with the resource string array "supported_languages"
         resourceConfigurations.addAll(

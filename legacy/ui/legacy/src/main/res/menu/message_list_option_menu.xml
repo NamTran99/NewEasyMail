@@ -20,6 +20,13 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/remove_ads"
+        android:icon="@drawable/ic_remove_ads"
+        android:title="@string/remove_ads"
+        app:showAsAction="always"
+        />
+
     <!-- MessageList -->
     <item
         android:id="@+id/search_remote"
@@ -135,7 +142,7 @@
         android:id="@+id/set_sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/sort_by"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         >
         <menu>
             <item

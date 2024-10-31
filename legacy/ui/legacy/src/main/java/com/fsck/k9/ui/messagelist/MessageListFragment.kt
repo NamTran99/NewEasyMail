@@ -25,8 +25,12 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import app.k9mail.core.android.common.Utils
+import app.k9mail.core.android.common.ads.GAMBannerAdUtil
+import app.k9mail.core.android.common.ads.GAMIntersAdUtil
 import app.k9mail.ui.utils.itemtouchhelper.ItemTouchHelper
 import app.k9mail.ui.utils.linearlayoutmanager.LinearLayoutManager
 import com.fsck.k9.Account
@@ -51,6 +55,7 @@ import com.fsck.k9.search.LocalSearch
 import com.fsck.k9.search.SearchAccount
 import com.fsck.k9.search.getAccounts
 import com.fsck.k9.ui.R
+import com.fsck.k9.ui.base.BaseBillingActivity
 import com.fsck.k9.ui.changelog.RecentChangesActivity
 import com.fsck.k9.ui.changelog.RecentChangesViewModel
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity
@@ -62,9 +67,11 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import java.util.concurrent.Future
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import net.jcip.annotations.GuardedBy
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
@@ -80,6 +87,7 @@ class MessageListFragment :
 
     val viewModel: MessageListViewModel by viewModel()
     private val recentChangesViewModel: RecentChangesViewModel by viewModel()
+    private val activityViewModel: MessageListActivityViewModel by activityViewModel()
 
     private val sortTypeToastProvider: SortTypeToastProvider by inject()
     private val folderNameFormatter: FolderNameFormatter by inject { parametersOf(requireContext()) }
@@ -278,6 +286,17 @@ class MessageListFragment :
             initializeMessageListLayout(view)
         } else {
             initializeErrorLayout(view)
+        }
+        initObserver()
+    }
+
+
+    private fun initObserver() {
+        activityViewModel.eventPurchaseStateChange.observe(viewLifecycleOwner){ isPurchased ->
+            if(isPurchased == true){
+                view?.findViewById<ViewGroup>(R.id.fl_container_banner_ad)?.isVisible = false
+                activity?.invalidateOptionsMenu()
+            }
         }
     }
 
@@ -612,6 +631,10 @@ class MessageListFragment :
 
         updateTitle()
         loadDataWhenResume()
+        viewLifecycleOwner.lifecycleScope.launch {
+            activity?.let { GAMIntersAdUtil.fetchAd(it) }
+            activity?.let { GAMBannerAdUtil.inflateBannerAd(it, view?.findViewById(R.id.fl_container_banner_ad)) }
+        }
     }
 
     override fun onPause() {
@@ -844,6 +867,9 @@ class MessageListFragment :
         menu.findItem(R.id.select_all).isVisible = true
         menu.findItem(R.id.mark_all_as_read).isVisible = isMarkAllAsReadSupported
         menu.findItem(R.id.empty_trash).isVisible = isShowingTrashFolder
+        viewLifecycleOwner.lifecycleScope.launch {
+            menu.findItem(R.id.remove_ads).isVisible = !Utils.isAppPurchased()
+        }
 
         if (isSingleAccountMode) {
             menu.findItem(R.id.send_messages).isVisible = isOutbox
@@ -888,6 +914,7 @@ class MessageListFragment :
             R.id.empty_trash -> onEmptyTrash()
             R.id.expunge -> onExpunge()
             R.id.search_everywhere -> onSearchEverywhere()
+            R.id.remove_ads -> (activity as? BaseBillingActivity)?.subscribeToMonthlyPlan()
             else -> return super.onOptionsItemSelected(item)
         }
 

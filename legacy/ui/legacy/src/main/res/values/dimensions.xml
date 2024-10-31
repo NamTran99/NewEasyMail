@@ -32,4 +32,5 @@
     <dimen name="floatingActionButtonMargin">16dp</dimen>
     <!-- Height of FloatingActionButton (56dp) plus two times floatingActionButtonMargin -->
     <dimen name="floatingActionButtonSpacing">88dp</dimen>
+    <dimen name="banner_ad_top_padding">6dp</dimen>
 </resources>

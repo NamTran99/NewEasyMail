@@ -9,10 +9,17 @@
     tools:context=".messagelist.MessageListFragment"
     >
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/fl_container_banner_ad"
         >
 
         <androidx.recyclerview.widget.RecyclerView
@@ -35,10 +42,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:shapeAppearanceOverlay="@style/fab_3_rounded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fl_container_banner_ad"
         android:layout_margin="@dimen/floatingActionButtonMargin"
         android:contentDescription="@string/compose_action"
         app:layout_behavior="com.fsck.k9.ui.fab.HideFabOnScrollBehavior"
         app:srcCompat="@drawable/ic_edit"
         />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/fl_container_banner_ad"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -63,6 +63,10 @@ object FirebaseUtil {
 }
 
 object FireBaseScreenEvent {
+    const val IS_USER_PURCHASED = "is_user_purchased"
+    const val IS_USER_NOT_PURCHASED = "is_user_not_purchased"
+    const val SHOW_INTERS_AD = "show_inters_ad"
+    const val SHOW_BANNER_ADS = "show_banner_ads"
     const val SEND_MAIL = "send_mail"
     const val SEND_MAIL_SUCCESS = "send_mail_success"
     const val SEND_MAIL_FAILED = "send_mail_failed"

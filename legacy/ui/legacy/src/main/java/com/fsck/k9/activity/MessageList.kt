@@ -23,9 +23,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
+import app.k9mail.core.android.common.Utils
+import app.k9mail.core.android.common.ads.GAMIntersAdUtil
 import app.k9mail.core.android.common.compat.BundleCompat
 import app.k9mail.core.android.common.contact.CachingRepository
 import app.k9mail.core.android.common.contact.ContactRepository
+import app.k9mail.core.android.common.data.FireBaseScreenEvent
+import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.core.ui.legacy.designsystem.atom.icon.Icons
 import app.k9mail.feature.launcher.FeatureLauncherActivity
 import com.fsck.k9.Account
@@ -50,6 +54,7 @@ import com.fsck.k9.search.isUnifiedInbox
 import com.fsck.k9.ui.BuildConfig
 import com.fsck.k9.ui.K9Drawer
 import com.fsck.k9.ui.R
+import com.fsck.k9.ui.base.BaseBillingActivity
 import com.fsck.k9.ui.base.K9Activity
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider
@@ -61,9 +66,11 @@ import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListene
 import com.fsck.k9.ui.messageview.PlaceholderFragment
 import com.fsck.k9.view.ViewSwitcher
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener
+import com.google.android.gms.ads.AdListener
 import com.google.android.material.textview.MaterialTextView
 import com.mikepenz.materialdrawer.util.getOptimalDrawerWidth
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -74,7 +81,7 @@ import timber.log.Timber
  * From this Activity the user can perform all standard message operations.
  */
 open class MessageList :
-    K9Activity(),
+    BaseBillingActivity(),
     MessageListFragmentListener,
     MessageViewFragmentListener,
     MessageViewContainerListener,
@@ -88,6 +95,7 @@ open class MessageList :
     private val generalSettingsManager: GeneralSettingsManager by inject()
     private val messagingController: MessagingController by inject()
     private val contactRepository: ContactRepository by inject()
+    private val activityViewModel by viewModel<MessageListActivityViewModel>()
 
     private lateinit var actionBar: ActionBar
     private var searchView: SearchView? = null
@@ -185,6 +193,25 @@ open class MessageList :
         initializeLayout()
         initializeFragments()
         displayViews()
+        initListener()
+    }
+
+    private fun initListener() {
+//        findViewById<View>(R.id.imgRemoveAds).setOnClickListener {
+//            subscribeToMonthlyPlan()
+//        }
+    }
+
+    override fun onPurchaseStateChange(isPurchased: Boolean) {
+        activityViewModel.senEventPurchaseStateChange(isPurchased)
+        if (isPurchased) {
+            FirebaseUtil.logEvent(FireBaseScreenEvent.IS_USER_PURCHASED)
+        } else {
+            FirebaseUtil.logEvent(FireBaseScreenEvent.IS_USER_NOT_PURCHASED)
+        }
+//        launchRepeatOnResume {
+//            findViewById<View>(R.id.imgRemoveAds).isVisible = !isPurchased
+//        }
     }
 
     public override fun onNewIntent(intent: Intent) {
@@ -652,7 +679,7 @@ open class MessageList :
             if (messageViewOnly) {
                 finish()
             } else {
-                showMessageList()
+                showMessageListWithInterAd()
             }
         } else if (!isSearchViewCollapsed()) {
             collapseSearchView()
@@ -1139,7 +1166,7 @@ open class MessageList :
     override fun goBack() {
         val fragmentManager = supportFragmentManager
         when {
-            displayMode == DisplayMode.MESSAGE_VIEW -> showMessageList()
+            displayMode == DisplayMode.MESSAGE_VIEW -> showMessageListWithInterAd()
             fragmentManager.backStackEntryCount > 0 -> fragmentManager.popBackStack()
             else -> finish()
         }
@@ -1204,6 +1231,20 @@ open class MessageList :
         val messageViewContainerFragment = checkNotNull(messageViewContainerFragment)
 
         return messageViewContainerFragment.showPreviousMessage()
+    }
+
+    private fun showMessageListWithInterAd(){
+        launchRepeatOnResume {
+            if(!Utils.isAppPurchased() && GAMIntersAdUtil.isAdAvailable()){
+                GAMIntersAdUtil.showAd(this@MessageList, object : AdListener(){
+                    override fun onAdClosed() {
+                        showMessageList()
+                    }
+                })
+            } else {
+                showMessageList()
+            }
+        }
     }
 
     private fun showMessageList() {

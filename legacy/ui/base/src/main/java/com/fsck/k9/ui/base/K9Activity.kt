@@ -8,9 +8,14 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.fsck.k9.controller.push.PushController
 import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 abstract class K9Activity(private val themeType: ThemeType) : AppCompatActivity() {
@@ -79,6 +84,12 @@ abstract class K9Activity(private val themeType: ThemeType) : AppCompatActivity(
 
     protected fun recreateCompat() {
         ActivityCompat.recreate(this)
+    }
+
+    fun launchRepeatOnResume(block: suspend CoroutineScope.() -> Unit){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED, block)
+        }
     }
 }
 
