@@ -58,6 +58,7 @@ import com.fsck.k9.ui.base.BaseBillingActivity
 import com.fsck.k9.ui.base.K9Activity
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider
+import com.fsck.k9.ui.messagelist.MessageListActivityViewModel
 import com.fsck.k9.ui.messagelist.MessageListFragment
 import com.fsck.k9.ui.messagelist.MessageListFragment.MessageListFragmentListener
 import com.fsck.k9.ui.messageview.MessageViewContainerFragment

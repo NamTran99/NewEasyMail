@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import app.k9mail.core.android.common.data.DataStoreHelper
 import app.k9mail.core.android.common.data.FirebaseUtil
 import app.k9mail.feature.account.oauth.data.microsoft.IMicrosoftSignIn
 import app.k9mail.feature.widget.message.list.MessageListWidgetManager
@@ -13,6 +14,7 @@ import com.fsck.k9.notification.NotificationChannelManager
 import com.fsck.k9.ui.base.AppLanguageManager
 import com.fsck.k9.ui.base.ThemeManager
 import com.fsck.k9.ui.base.extensions.currentLocale
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import io.paperdb.Paper
 import java.util.Locale
