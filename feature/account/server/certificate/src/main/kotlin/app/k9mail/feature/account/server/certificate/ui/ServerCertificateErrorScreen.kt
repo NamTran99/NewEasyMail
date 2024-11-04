@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,6 +43,11 @@ fun ServerCertificateErrorScreen(
             is Effect.NavigateCertificateAccepted -> onCertificateAccepted()
             is Effect.NavigateBack -> onBack()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        //Force accept to dismiss this error screen
+        dispatch(Event.OnCertificateAcceptedClicked)
     }
 
     BackHandler {

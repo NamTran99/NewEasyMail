@@ -6,13 +6,13 @@ object AdIds {
 
     private fun getBannerAd(): String {
         val debugIds = "/6499/example/banner"
-        val newAdId = "/424536528,23041610225/1524961_banner_com.emailclient.mailchecker.outlook.hotmail"
+        val newAdId = "/424536528,22760543955/1524228_banner_mail.emailapp.easymail2018"
         return newAdId
     }
 
     private fun getInterAd(): String {
         val debugIds = "/6499/example/interstitial"
-        val newAdId = "/424536528,23041610225/1524962_interstitial_com.emailclient.mailchecker.outlook.hotmail"
+        val newAdId = "/424536528,23041610225/1524226_interstitial_mail.emailapp.easymail2018"
         return newAdId
     }
 }
