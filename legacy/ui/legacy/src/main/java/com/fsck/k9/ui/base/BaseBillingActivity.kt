@@ -66,13 +66,7 @@ abstract class BaseBillingActivity : K9Activity() {
         // Use a Pair to hold BillingResult and List<Purchase>
         val resultPair = suspendCancellableCoroutine<Pair<BillingResult, List<Purchase>>> { continuation ->
             billingClient.queryPurchasesAsync(queryPurchasesParams) { result: BillingResult, purchases: List<Purchase> ->
-                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    // Resume with a Pair of BillingResult and purchases
-                    continuation.resume(Pair(result, purchases))
-                } else {
-                    // Resume with an exception if there was an error
-                    continuation.resumeWithException(Exception(result.debugMessage))
-                }
+                continuation.resume(Pair(result, purchases))
             }
         }
 
