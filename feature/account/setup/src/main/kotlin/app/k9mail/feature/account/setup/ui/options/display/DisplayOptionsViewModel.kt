@@ -58,6 +58,7 @@ internal class DisplayOptionsViewModel(
                     displayOptionsState
                 }
             }
+            submit()
         }
     }
 
