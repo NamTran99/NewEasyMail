@@ -8,13 +8,12 @@ import android.util.Log
 import app.k9mail.core.android.common.Utils
 import com.android.billingclient.api.*
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 abstract class BaseBillingActivity : K9Activity() {
 
     private lateinit var billingClient: BillingClient
-    private val subscriptionId = "remove_ads_sub_monthly"
+    private val ITEM_IAP = "item_remove_ads"
 
     abstract fun onPurchaseStateChange(isPurchased: Boolean)
 
@@ -46,7 +45,7 @@ abstract class BaseBillingActivity : K9Activity() {
                 override fun onBillingSetupFinished(billingResult: BillingResult) {
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                         launchRepeatOnResume {
-                            checkSubscriptionStatus()
+                            checkIAPStatus()
                         }
                     }
                 }
@@ -58,9 +57,9 @@ abstract class BaseBillingActivity : K9Activity() {
         )
     }
 
-    private suspend fun checkSubscriptionStatus() {
+    private suspend fun checkIAPStatus() {
         val queryPurchasesParams = QueryPurchasesParams.newBuilder()
-            .setProductType(BillingClient.ProductType.SUBS)
+            .setProductType(BillingClient.ProductType.INAPP)
             .build()
 
         // Use a Pair to hold BillingResult and List<Purchase>
@@ -74,56 +73,62 @@ abstract class BaseBillingActivity : K9Activity() {
 
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
             // Check if the user is subscribed
-            val isSubscribed = purchases.any { it.products.contains(subscriptionId) && it.isAutoRenewing }
+            val isSubscribed = purchases.any { it.products.contains(ITEM_IAP) }
 
             if (isSubscribed) {
                 Utils.setIsAppPurchased(true)
                 onPurchaseStateChange(true)
-                Log.i("SubscriptionStatus", "User is already subscribed to $subscriptionId")
+                Log.i("SubscriptionStatus", "User is already subscribed to $ITEM_IAP")
             } else {
                 Utils.setIsAppPurchased(false)
                 onPurchaseStateChange(false)
-                Log.i("SubscriptionStatus", "User is not subscribed to $subscriptionId")
+                Log.i("SubscriptionStatus", "User is not subscribed to $ITEM_IAP")
             }
         } else {
             Log.e("SubscriptionStatus", "Error checking subscription: ${billingResult.debugMessage}")
         }
     }
 
-    fun subscribeToMonthlyPlan() {
+    fun buyIAP() {
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(subscriptionId)
-                .setProductType(BillingClient.ProductType.SUBS)
-                .build(),
+                .setProductId(ITEM_IAP)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
         )
 
-        billingClient.queryProductDetailsAsync(
-            QueryProductDetailsParams.newBuilder().setProductList(productList).build(),
-        ) { billingResult, productDetailsList ->
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+
+        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
                 val productDetails = productDetailsList[0]
-                val offerToken = productDetails.subscriptionOfferDetails?.get(0)?.offerToken ?: ""
-                val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
-                    .setProductDetails(productDetails)
-                    .setOfferToken(offerToken)
-                    .build()
+
+                // Build billing flow parameters
                 val billingFlowParams = BillingFlowParams.newBuilder()
-                    .setProductDetailsParamsList(listOf(productDetailsParams))
+                    .setProductDetailsParamsList(
+                        listOf(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails)
+                                .build()
+                        )
+                    )
                     .build()
 
+                // Launch the billing flow
                 val billingResultLaunch = billingClient.launchBillingFlow(this, billingFlowParams)
                 if (billingResultLaunch.responseCode != BillingClient.BillingResponseCode.OK) {
-                    Log.e("BillingFlow", "Error launching billing flow: ${billingResultLaunch.debugMessage}")
+                    Log.e("BillingActivity", "Failed to launch billing flow: ${billingResultLaunch.debugMessage}")
                 }
             } else {
-                Log.e("ProductDetails", "Error fetching product details: ${billingResult.debugMessage}")
+                Log.e("BillingActivity", "Failed to query product details: ${billingResult.debugMessage}")
             }
         }
     }
 
     private suspend fun handlePurchase(purchase: Purchase) {
-        if (purchase.products.contains(subscriptionId)) {
+        if (purchase.products.contains(ITEM_IAP)) {
             if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                 Utils.setIsAppPurchased(true)
                 onPurchaseStateChange(true)

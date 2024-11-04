@@ -914,7 +914,7 @@ class MessageListFragment :
             R.id.empty_trash -> onEmptyTrash()
             R.id.expunge -> onExpunge()
             R.id.search_everywhere -> onSearchEverywhere()
-            R.id.remove_ads -> (activity as? BaseBillingActivity)?.subscribeToMonthlyPlan()
+            R.id.remove_ads -> (activity as? BaseBillingActivity)?.buyIAP()
             else -> return super.onOptionsItemSelected(item)
         }
 
