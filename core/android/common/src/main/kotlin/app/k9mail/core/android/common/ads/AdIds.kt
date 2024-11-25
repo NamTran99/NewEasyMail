@@ -12,7 +12,7 @@ object AdIds {
 
     private fun getInterAd(): String {
         val debugIds = "/6499/example/interstitial"
-        val newAdId = "/424536528,23041610225/1524226_interstitial_mail.emailapp.easymail2018"
+        val newAdId = "/424536528,22760543955/1524226_interstitial_mail.emailapp.easymail2018"
         return newAdId
     }
 }
