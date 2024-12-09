@@ -126,6 +126,7 @@
         <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle.K9.Light</item>
         <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle.K9.Light</item>
         <item name="actionModeStyle">@style/CustomActionModeMenuStyle</item>
+        <item name="materialAlertDialogTheme">@style/CustomMaterialAlertDialogTheme</item>
     </style>
 
     <style name="Theme.K9.Dark" parent="Theme2.Main.Dark">
@@ -286,5 +287,11 @@
 
     <style name="CustomActionModeMenuStyle" parent="Widget.AppCompat.ActionMode">
     </style>
+
+    <style name="CustomMaterialAlertDialogTheme" parent="Theme.K9.DayNight.Dialog">
+        <item name="colorSurface">@color/k9_neutral_100</item>
+    </style>
+
+
 
 </resources>
