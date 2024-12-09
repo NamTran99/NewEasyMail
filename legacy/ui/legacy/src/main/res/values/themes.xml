@@ -46,7 +46,7 @@
         <item name="colorOnSurfaceInverse">@color/k9_neutral_095</item>
         <item name="colorSurfaceBright">@color/k9_neutral_098</item>
         <item name="colorSurfaceDim">@color/k9_neutral_087</item>
-        <item name="colorSurfaceContainer">@color/k9_neutral_094</item>
+        <item name="colorSurfaceContainer">@color/k9_neutral_100</item>
         <item name="colorSurfaceContainerLow">@color/k9_neutral_096</item>
         <item name="colorSurfaceContainerHigh">@color/k9_neutral_092</item>
         <item name="colorSurfaceContainerLowest">@color/k9_neutral_100</item>
@@ -82,7 +82,7 @@
         <item name="appLogo">@drawable/ic_app_logo</item>
 
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
-        <item name="actionBarPopupTheme">@style/Widget.App.ActionMode.PopupMenu</item>
+<!--        <item name="actionBarPopupTheme">@style/Widget.App.ActionMode.PopupMenu</item>-->
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
 
         <!-- Legacy styles -->
@@ -125,6 +125,7 @@
 
         <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle.K9.Light</item>
         <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle.K9.Light</item>
+        <item name="actionModeStyle">@style/CustomActionModeMenuStyle</item>
     </style>
 
     <style name="Theme.K9.Dark" parent="Theme2.Main.Dark">
@@ -280,5 +281,10 @@
     <style name="Theme.K9.DayNight" parent="Theme.K9.Light" />
     <style name="Theme.K9.DayNight.Dialog" parent="Theme.K9.Light.Dialog" />
     <style name="Theme.K9.DayNight.Dialog.Translucent" parent="Theme.K9.Light.Dialog.Translucent" />
+
+
+
+    <style name="CustomActionModeMenuStyle" parent="Widget.AppCompat.ActionMode">
+    </style>
 
 </resources>
