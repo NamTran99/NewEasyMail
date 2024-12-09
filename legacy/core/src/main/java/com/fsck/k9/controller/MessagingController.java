@@ -2443,7 +2443,8 @@ public class MessagingController {
 
     public void notifyUserIfCertificateProblem(Account account, Exception exception, boolean incoming) {
         if (exception instanceof CertificateValidationException) {
-            notificationController.showCertificateErrorNotification(account, incoming);
+            //Hungnd: do not show this notification
+//            notificationController.showCertificateErrorNotification(account, incoming);
         }
     }
 
