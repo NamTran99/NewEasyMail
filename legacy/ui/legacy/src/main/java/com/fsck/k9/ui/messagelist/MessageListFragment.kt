@@ -895,6 +895,7 @@ class MessageListFragment :
         menu.findItem(R.id.empty_trash).isVisible = false
         menu.findItem(R.id.expunge).isVisible = false
         menu.findItem(R.id.search_everywhere).isVisible = false
+        menu.findItem(R.id.remove_ads).isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
